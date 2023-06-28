@@ -1,17 +1,15 @@
 {
   "name": "crypto-price",
+  "homepage": "https://vovak0-23.github.io/crypto-price/",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "private": true,
   "type": "module",
-  "scripts": {
-    "build": "node esbuild.config.js --build",
-    "start": "node esbuild.config.js --start"
-  },
   "dependencies": {
     "dotenv": "^16.3.1",
     "esbuild": "^0.18.10",
+    "gh-pages": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.1.5"
@@ -19,5 +17,11 @@
   "devDependencies": {
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6"
+  },
+  "scripts": {
+    "start": "node esbuild.config.js --start",
+    "build": "node esbuild.config.js --build",
+    "predeploy": "yarn build --production",
+    "deploy": "gh-pages -d public"
   }
 }

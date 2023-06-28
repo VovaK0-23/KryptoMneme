@@ -10,8 +10,10 @@ const config = {
   outfile: 'public/build/bundle.js',
   bundle: true,
   define: {
-    'process.env.NODE_ENV': JSON.stringify(
-      process.env.NODE_ENV || 'production'
+    NODE_ENV: JSON.stringify(
+      args.includes('--production')
+        ? 'production'
+        : process.env.NODE_ENV || 'production'
     ),
   },
 };
@@ -21,7 +23,7 @@ if (args.includes('--build')) {
     .build({
       ...config,
       minify: true,
-      sourcemap: true,
+      sourcemap: false,
     })
     .catch(e => {
       console.error(e);

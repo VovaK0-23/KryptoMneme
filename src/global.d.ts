@@ -1,1 +1,1 @@
-declare var process: { env: { NODE_ENV: string } };
+declare const NODE_ENV: string;
