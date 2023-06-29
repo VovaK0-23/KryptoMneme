@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import esbuild from 'esbuild';
+import { postcssModules, sassPlugin } from 'esbuild-sass-plugin';
 import process from 'node:process';
 
 dotenv.config();
@@ -8,13 +9,26 @@ const args = process.argv;
 const config = {
   logLevel: 'info',
   entryPoints: ['src/index.ts'],
-  outfile: 'public/build/bundle.js',
+  outdir: 'public/build/',
   bundle: true,
   define: {
     NODE_ENV: JSON.stringify(
       args.includes('--production') ? 'production' : process.env.NODE_ENV || 'production'
     ),
   },
+  plugins: [
+    sassPlugin({
+      loadPaths: ['src'],
+      filter: /\.module\.scss$/,
+      transform: postcssModules({
+        generateScopedName: '[hash:base64:8]--[local]',
+        localsConvention: 'camelCaseOnly',
+      }),
+    }),
+    sassPlugin({
+      filter: /\.scss$/,
+    }),
+  ],
 };
 
 if (args.includes('--build')) {
