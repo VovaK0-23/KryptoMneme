@@ -2,12 +2,12 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { App } from './App';
+import { Home } from './Home';
 
-describe('App component', () => {
+describe('Home component', () => {
   test('renders the component with initial count and message', () => {
     const message = 'Hello, world!';
-    render(<App message={message} />);
+    render(<Home message={message} />);
 
     const messageElement = screen.getByText(message);
     expect(messageElement).toBeInTheDocument();
@@ -17,7 +17,7 @@ describe('App component', () => {
   });
 
   test('increments the count when the button is clicked', async () => {
-    render(<App message='Test Message' />);
+    render(<Home message='Test Message' />);
 
     const countElement = screen.getByText(/Count:/i);
     const incrementButton = screen.getByRole('button', { name: /Increment/i });

@@ -29,6 +29,8 @@ const config = {
       filter: /\.scss$/,
     }),
   ],
+  publicPath: 'build',
+  loader: { '.png': 'file' },
 };
 
 if (args.includes('--build')) {
