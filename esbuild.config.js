@@ -1,69 +1,75 @@
 import dotenv from 'dotenv';
 import esbuild from 'esbuild';
 import { postcssModules, sassPlugin } from 'esbuild-sass-plugin';
-import process from 'node:process';
 
 dotenv.config();
+
+const outdir = './public';
 const args = process.argv;
 
+const plugins = [
+  sassPlugin({
+    loadPaths: ['src'],
+    filter: /\.module\.scss$/,
+    transform: postcssModules({
+      generateScopedName: '[hash:base64:8]--[local]',
+      localsConvention: 'camelCaseOnly',
+    }),
+  }),
+  sassPlugin({
+    filter: /\.scss$/,
+  }),
+];
+
 const config = {
-  logLevel: 'info',
   entryPoints: ['src/index.ts'],
-  outdir: 'public/build/',
+  entryNames: 'build/[name]',
+  assetNames: '[dir]/[name]-[hash]',
+  outdir,
   bundle: true,
-  define: {
-    NODE_ENV: JSON.stringify(
-      args.includes('--production') ? 'production' : process.env.NODE_ENV || 'production'
-    ),
-  },
-  plugins: [
-    sassPlugin({
-      loadPaths: ['src'],
-      filter: /\.module\.scss$/,
-      transform: postcssModules({
-        generateScopedName: '[hash:base64:8]--[local]',
-        localsConvention: 'camelCaseOnly',
-      }),
-    }),
-    sassPlugin({
-      filter: /\.scss$/,
-    }),
-  ],
-  publicPath: 'build',
+  logLevel: 'info',
+  plugins,
   loader: { '.png': 'file' },
 };
 
 if (args.includes('--build')) {
-  esbuild
-    .build({
+  try {
+    await esbuild.build({
       ...config,
       minify: true,
-      sourcemap: false,
-    })
-    .catch((e) => {
-      console.error(e);
-      process.exit(1);
+      sourcemap: true,
+      sourcesContent: false,
+      define: {
+        NODE_ENV: 'production',
+      },
     });
+  } catch (err) {
+    console.error('Build failed:', err);
+    process.exit(1);
+  }
 }
 
 if (args.includes('--start')) {
-  esbuild
-    .context({
+  try {
+    const ctx = await esbuild.context({
       ...config,
       minify: false,
       sourcemap: true,
-    })
-    .then(async (ctx) => {
-      await ctx.watch();
-      await ctx.serve({
-        servedir: 'public',
-        onRequest: ({ remoteAddress, method, path, status, timeInMS }) => {
-          console.info(remoteAddress, status, `"${method} ${path}" [${timeInMS}ms]`);
-        },
-      });
-    })
-    .catch((e) => {
-      console.error(e);
-      process.exit(1);
+      sourcesContent: true,
+      define: {
+        NODE_ENV: process.env.NODE_ENV || 'production',
+      },
     });
+
+    await ctx.watch();
+    await ctx.serve({
+      servedir: outdir,
+      onRequest: ({ remoteAddress, method, path, status, timeInMS }) => {
+        console.info(remoteAddress, status, `"${method} ${path}" [${timeInMS}ms]`);
+      },
+    });
+  } catch (err) {
+    console.error('Server failed to start', err);
+    process.exit(1);
+  }
 }
