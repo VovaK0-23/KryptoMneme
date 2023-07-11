@@ -18,7 +18,7 @@
     "postcss-modules": "^6.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^5.1.5",
+    "typescript": "^5.0.4",
     "typescript-plugin-css-modules": "^5.0.1"
   },
   "devDependencies": {
@@ -32,23 +32,38 @@
     "@types/react-dom": "^18.2.6",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
+    "concurrently": "^8.2.0",
     "esbuild-jest": "^0.5.0",
     "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",
+    "eslint-formatter-pretty": "^5.0.0",
     "eslint-plugin-compat": "^4.1.4",
     "eslint-plugin-react": "^7.32.2",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
+    "jest-runner-eslint": "^2.1.0",
+    "jest-silent-reporter": "^0.5.0",
     "prettier": "2.8.8"
   },
   "scripts": {
+    "dev": "concurrently -k -n 'build' -c 'auto' 'yarn start' 'yarn:*:watch'",
     "start": "node esbuild.config.js --start",
     "build": "node esbuild.config.js --build",
-    "test": "jest --watch",
+    "test": "jest --selectProjects test",
+    "lint": "jest --selectProjects lint",
+    "test:watch": "yarn test --watch",
+    "lint:watch": "yarn lint --watch",
+    "tsc:watch": "tsc --pretty --watch",
     "fmt": "prettier --write",
-    "lint": "eslint --fix",
-    "predeploy": "yarn build --production",
+    "predeploy": "yarn build",
     "deploy": "gh-pages -d public"
+  },
+  "jest-runner-eslint": {
+    "cliOptions": {
+      "format": "pretty",
+      "cache": true,
+      "fix": true
+    }
   },
   "browserslist": [
     "defaults",
