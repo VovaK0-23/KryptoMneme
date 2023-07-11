@@ -3,17 +3,15 @@
     "target": "es6",
     "jsx": "react",
 
-    "module": "es6",
     "moduleResolution": "node",
     "rootDir": "src",
     "baseUrl": "src",
 
     "strict": true,
 
-    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
 
-    "noUnusedLocals": true,
     "noEmit": true,
 
     "skipLibCheck": true,
