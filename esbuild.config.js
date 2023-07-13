@@ -27,6 +27,7 @@ const config = {
   assetNames: '[dir]/[name]-[hash]',
   outdir,
   bundle: true,
+  sourcemap: true,
   logLevel: 'info',
   plugins,
   loader: { '.png': 'file' },
@@ -37,10 +38,9 @@ if (args.includes('--build')) {
     await esbuild.build({
       ...config,
       minify: true,
-      sourcemap: true,
       sourcesContent: false,
       define: {
-        NODE_ENV: 'production',
+        NODE_ENV: JSON.stringify('production'),
       },
     });
   } catch (err) {
@@ -54,10 +54,9 @@ if (args.includes('--start')) {
     const ctx = await esbuild.context({
       ...config,
       minify: false,
-      sourcemap: true,
       sourcesContent: true,
       define: {
-        NODE_ENV: process.env.NODE_ENV || 'production',
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'production'),
       },
     });
 
