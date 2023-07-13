@@ -17,6 +17,10 @@ describe('ErrorBoundary', () => {
     console.error = jest.fn();
   });
 
+  const ChildComponentWithError = ({ error }: { error: Error }) => {
+    throw error;
+  };
+
   test('should render children when there is no error', () => {
     render(
       <ErrorBoundary>
@@ -27,10 +31,6 @@ describe('ErrorBoundary', () => {
     const childComponent = screen.getByText('Child Component');
     expect(childComponent).toBeInTheDocument();
   });
-
-  const ChildComponentWithError = ({ error }: { error: Error }) => {
-    throw error;
-  };
 
   test('should render error message and stack trace when there is an error', () => {
     const error = new Error('Test Error');
