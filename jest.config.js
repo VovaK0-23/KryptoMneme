@@ -20,12 +20,14 @@ export default {
     {
       displayName: 'test',
 
-      rootDir: './src',
+      rootDir: '<rootDir>',
       // setupFiles: [],
-      setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
+      setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
       slowTestThreshold: 5,
       // snapshotSerializers: [],
       testEnvironment: 'jsdom',
+
+      moduleNameMapper: { '^@/(.*)$': '<rootDir>/src/$1' },
 
       transform: {
         '^.+\\.(tsx|ts)?$': 'esbuild-jest',
