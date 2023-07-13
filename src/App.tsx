@@ -1,10 +1,10 @@
 import { CssBaseline } from '@mui/material';
 import React from 'react';
 
-import { CustomThemeProvider } from '@/context/CustomThemeProvider';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Header } from '@/components/Header';
 import { Home } from '@/components/Home';
+import { CustomThemeProvider } from '@/contexts/CustomThemeContext';
 
 import { ErrorSnackbar } from './components/ErrorSnackbar';
 import { ErrorProvider } from './contexts/ErrorContext';

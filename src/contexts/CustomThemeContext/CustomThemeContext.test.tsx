@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React, { useContext } from 'react';
 
-import { CustomThemeContext, CustomThemeProvider } from './CustomThemeProvider';
+import { CustomThemeContext, CustomThemeProvider } from './CustomThemeContext';
 
 describe('CustomThemeProvider', () => {
   it('applies light theme when prefers-color-scheme is light', () => {
