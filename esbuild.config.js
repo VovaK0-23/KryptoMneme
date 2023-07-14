@@ -4,7 +4,7 @@ import { postcssModules, sassPlugin } from 'esbuild-sass-plugin';
 
 dotenv.config();
 
-const outdir = './public';
+const outdir = 'public';
 const args = process.argv;
 
 const plugins = [
@@ -37,6 +37,7 @@ if (args.includes('--build')) {
   try {
     await esbuild.build({
       ...config,
+      publicPath: '/crypto-price',
       minify: true,
       sourcesContent: false,
       define: {
@@ -62,7 +63,7 @@ if (args.includes('--start')) {
 
     await ctx.watch();
     await ctx.serve({
-      servedir: outdir,
+      servedir: 'public',
       onRequest: ({ remoteAddress, method, path, status, timeInMS }) => {
         console.info(remoteAddress, status, `"${method} ${path}" [${timeInMS}ms]`);
       },
