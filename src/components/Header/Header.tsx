@@ -4,9 +4,8 @@ import React, { useContext } from 'react';
 
 import logo from '@/assets/logo.png';
 import { HideOnScroll } from '@/components/HideOnScroll';
-import { CustomThemeContext } from '@/context/CustomThemeProvider';
-
-import { Search } from './Search';
+import { Search } from '@/components/Search';
+import { CustomThemeContext } from '@/contexts/CustomThemeContext';
 
 export const Header = () => {
   const theme = useTheme();

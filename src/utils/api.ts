@@ -9,9 +9,7 @@ export const fetchResult = async (
     const response = await fetch(url, options);
 
     if (response.ok) return SuccessRes(response);
-    else {
-      return ErrorRes(await RequestError(response));
-    }
+    else return ErrorRes(await RequestError(response));
   } catch (err) {
     const errorType =
       err instanceof TypeError && err.message === 'Failed to fetch' ? 'network_error' : 'default';
