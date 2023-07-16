@@ -23,8 +23,13 @@
       "type": "image/png"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "files": [
+    "cg_logo_dark-THXNB6QP.svg",
+    "cg_logo_light-6BGBXVEW.svg",
+    "logo-AAGB77KN.png"
+  ]
 }

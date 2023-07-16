@@ -1,0 +1,2 @@
+"use strict";(()=>{var n="crypto-app-cache",l=["/","/manifest.json","/build/index.js"];self.addEventListener("install",e=>{e.waitUntil((async()=>{let s=await caches.open(n);s.addAll(l),fetch("/manifest.json").then(t=>t.json()).then(t=>{let a=t.files.map(c=>`/assets/${c}`);s.addAll(a)})})())});self.addEventListener("activate",e=>{e.waitUntil(clients.claim())});self.addEventListener("fetch",async e=>{e.respondWith(caches.open(n).then(s=>s.match(e.request).then(t=>t||fetch(e.request))))});var i=null;})();
+//# sourceMappingURL=/crypto-price/sw.js.map
