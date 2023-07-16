@@ -6,4 +6,4 @@ manifest.json
 node_modules
 public/assets/
 public/build/
-public/sw.js
+public/sw.js*
