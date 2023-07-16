@@ -1,7 +1,9 @@
 *.log
 .env
+.eslintcache
 coverage
+manifest.json
 node_modules
 public/assets/
 public/build/
-.eslintcache
+public/sw.js

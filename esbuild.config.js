@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 import esbuild from 'esbuild';
 import { postcssModules, sassPlugin } from 'esbuild-sass-plugin';
+import fs from 'fs';
+import path from 'path';
 
 dotenv.config();
 
@@ -22,9 +24,9 @@ const plugins = [
 ];
 
 const config = {
-  entryPoints: ['src/index.ts'],
-  entryNames: 'build/[name]',
+  entryPoints: [{in: 'src/index.ts', out: 'build/index' }, {in: 'src/sw.ts', out: 'sw'}],
   assetNames: '[dir]/[name]-[hash]',
+  outbase: 'src',
   outdir,
   bundle: true,
   sourcemap: true,
@@ -44,6 +46,7 @@ if (args.includes('--build')) {
         NODE_ENV: JSON.stringify('production'),
       },
     });
+    generateManifest();
   } catch (err) {
     console.error('Build failed:', err);
     process.exit(1);
@@ -68,8 +71,52 @@ if (args.includes('--start')) {
         console.info(remoteAddress, status, `"${method} ${path}" [${timeInMS}ms]`);
       },
     });
+    generateManifest();
   } catch (err) {
     console.error('Server failed to start', err);
     process.exit(1);
   }
+}
+
+function generateManifest() {
+  const assetsFolder = outdir + '/assets';
+
+  const files = fs.readdirSync(assetsFolder);
+
+  const manifest = {
+    short_name: 'crypto-price',
+    name: 'crypto-price',
+    icons: [
+      {
+        src: 'favicon.ico',
+        sizes: '64x64',
+        type: 'image/x-icon',
+      },
+      {
+        src: 'favicon-16x16.png',
+        sizes: '16x16',
+        type: 'image/png',
+      },
+      {
+        src: 'favicon-32x32.png',
+        sizes: '32x32',
+        type: 'image/png',
+      },
+      {
+        src: 'apple-touch-icon.png',
+        sizes: '144x144',
+        type: 'image/png',
+      },
+    ],
+    start_url: '/',
+    display: 'standalone',
+    theme_color: '#000000',
+    background_color: '#ffffff',
+    files,
+  };
+
+  // Write the manifest object to a JSON file
+  const manifestPath = path.join(path.dirname('.'), outdir, 'manifest.json');
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  console.log('Manifest generated');
 }
