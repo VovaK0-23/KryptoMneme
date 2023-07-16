@@ -30,7 +30,7 @@ const config = {
   sourcemap: true,
   logLevel: 'info',
   plugins,
-  loader: { '.png': 'file' },
+  loader: { '.png': 'file', '.svg': 'file' },
 };
 
 if (args.includes('--build')) {

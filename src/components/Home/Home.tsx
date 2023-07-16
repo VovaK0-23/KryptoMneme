@@ -1,4 +1,4 @@
-import { Box, Container, Toolbar } from '@mui/material';
+import { Container } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 
 export const Home = (props: { message: string }) => {
@@ -9,15 +9,10 @@ export const Home = (props: { message: string }) => {
   }, [count]);
 
   return (
-    <>
-      <Toolbar />
-      <Container>
-        <Box>
-          <h1>{props.message}</h1>
-          <h2>Count: {count}</h2>
-          <button onClick={increment}>Increment</button>
-        </Box>
-      </Container>
-    </>
+    <Container>
+      <h1>{props.message}</h1>
+      <h2>Count: {count}</h2>
+      <button onClick={increment}>Increment</button>
+    </Container>
   );
 };

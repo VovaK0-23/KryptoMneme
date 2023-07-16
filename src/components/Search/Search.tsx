@@ -52,7 +52,6 @@ export const Search = () => {
         }
         noOptionsText='No results'
         options={options}
-        limitTags={50}
         size='small'
         sx={{ width: '50%' }}
         onInputChange={(_, newInputValue) => {

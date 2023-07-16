@@ -12,20 +12,23 @@ export const Header = () => {
   const themeMode = useContext(CustomThemeContext);
 
   return (
-    <HideOnScroll>
-      <AppBar color='default'>
-        <Toolbar>
-          <IconButton>
-            <img src={logo} width='24' />
-          </IconButton>
-          <Box sx={{ flexGrow: 1 }} />
-          <Search />
-          <Box sx={{ flexGrow: 1 }} />
-          <IconButton onClick={themeMode.toggle}>
-            {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-    </HideOnScroll>
+    <>
+      <HideOnScroll>
+        <AppBar color='default'>
+          <Toolbar>
+            <IconButton>
+              <img src={logo} width='24' />
+            </IconButton>
+            <Box sx={{ flexGrow: 1 }} />
+            <Search />
+            <Box sx={{ flexGrow: 1 }} />
+            <IconButton onClick={themeMode.toggle}>
+              {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+      </HideOnScroll>
+      <Toolbar />
+    </>
   );
 };
