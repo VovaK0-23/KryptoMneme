@@ -1,2 +1,50 @@
-"use strict";(()=>{var i="crypto-price-cache1689612100346",s=e=>"/crypto-price"+e,o=[s("/"),s("/manifest.json"),s("/build/index.js")];self.addEventListener("install",e=>{self.skipWaiting(),e.waitUntil((async()=>{await caches.keys().then(t=>{t.forEach(c=>{caches.delete(c)})});let n=await caches.open(i);[...(await(await fetch(s("/manifest.json"))).json()).files.map(t=>s(`/assets/${t}`)),...o].forEach(async t=>{let c=await fetch(t+"?v="+Date.now().toString());n.put(t,c)}),console.log("SW install")})())});self.addEventListener("activate",e=>{e.waitUntil(clients.claim()),console.log("SW activate")});self.addEventListener("fetch",async e=>{e.respondWith(caches.open(i).then(n=>n.match(e.request).then(a=>a||fetch(e.request))))});var f=null;})();
-//# sourceMappingURL=/crypto-price/sw.js.map
+"use strict";
+(() => {
+  // src/sw.ts
+  var CACHE_NAME = "crypto-price-cache1689612073637";
+  var publicPath = (str) => "" + str;
+  var PRECACHE_ASSETS = [
+    publicPath("/"),
+    publicPath("/manifest.json"),
+    publicPath("/build/index.js")
+  ];
+  self.addEventListener("install", (event) => {
+    self.skipWaiting();
+    event.waitUntil(
+      (async () => {
+        await caches.keys().then((cacheNames) => {
+          cacheNames.forEach((name) => {
+            caches.delete(name);
+          });
+        });
+        const cache = await caches.open(CACHE_NAME);
+        const response = await fetch(publicPath("/manifest.json"));
+        const manifest = await response.json();
+        const assetUrls = manifest.files.map((file) => publicPath(`/assets/${file}`));
+        [...assetUrls, ...PRECACHE_ASSETS].forEach(async (url) => {
+          const response2 = await fetch(url + "?v=" + Date.now().toString());
+          cache.put(url, response2);
+        });
+        console.log("SW install");
+      })()
+    );
+  });
+  self.addEventListener("activate", (event) => {
+    event.waitUntil(clients.claim());
+    console.log("SW activate");
+  });
+  self.addEventListener("fetch", async (event) => {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(
+        (cache) => cache.match(event.request).then((response) => {
+          if (response) {
+            return response;
+          } else
+            return fetch(event.request);
+        })
+      )
+    );
+  });
+  var sw_default = null;
+})();
+//# sourceMappingURL=sw.js.map
