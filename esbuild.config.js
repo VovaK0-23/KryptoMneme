@@ -24,7 +24,10 @@ const plugins = [
 ];
 
 const config = {
-  entryPoints: [{in: 'src/index.ts', out: 'build/index' }, {in: 'src/sw.ts', out: 'sw'}],
+  entryPoints: [
+    { in: 'src/index.ts', out: 'build/index' },
+    { in: 'src/sw.ts', out: 'sw' },
+  ],
   assetNames: '[dir]/[name]-[hash]',
   outbase: 'src',
   outdir,
@@ -36,17 +39,20 @@ const config = {
 };
 
 if (args.includes('--build')) {
+  const publicPath = '/crypto-price';
   try {
     await esbuild.build({
       ...config,
-      publicPath: '/crypto-price',
+      publicPath,
       minify: true,
       sourcesContent: false,
       define: {
         NODE_ENV: JSON.stringify('production'),
+        PUBLIC_PATH: JSON.stringify(publicPath),
+        SW_VERSION: JSON.stringify(Date.now().toString()),
       },
     });
-    generateManifest();
+    generateManifest(publicPath);
   } catch (err) {
     console.error('Build failed:', err);
     process.exit(1);
@@ -61,6 +67,8 @@ if (args.includes('--start')) {
       sourcesContent: true,
       define: {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'production'),
+        PUBLIC_PATH: JSON.stringify(''),
+        SW_VERSION: JSON.stringify(Date.now().toString()),
       },
     });
 
@@ -78,10 +86,8 @@ if (args.includes('--start')) {
   }
 }
 
-function generateManifest() {
-  const assetsFolder = outdir + '/assets';
-
-  const files = fs.readdirSync(assetsFolder);
+function generateManifest(startUrl = '/') {
+  const files = fs.readdirSync(outdir + '/assets');
 
   const manifest = {
     short_name: 'crypto-price',
@@ -108,7 +114,7 @@ function generateManifest() {
         type: 'image/png',
       },
     ],
-    start_url: '/',
+    start_url: startUrl,
     display: 'standalone',
     theme_color: '#000000',
     background_color: '#ffffff',

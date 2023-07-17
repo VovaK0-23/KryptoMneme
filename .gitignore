@@ -2,8 +2,8 @@
 .env
 .eslintcache
 coverage
-manifest.json
 node_modules
 public/assets/
 public/build/
+public/manifest.json
 public/sw.js*

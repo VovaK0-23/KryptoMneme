@@ -3,28 +3,45 @@
 declare const self: ServiceWorkerGlobalScope;
 declare const clients: Clients;
 
-const CACHE_NAME = 'crypto-app-cache';
+const CACHE_NAME = 'crypto-price-cache' + SW_VERSION;
+
+const publicPath = (str: string) => PUBLIC_PATH + str;
 
 // Add whichever assets you want to pre-cache here:
-const PRECACHE_ASSETS = ['/', '/manifest.json', '/build/index.js'];
+const PRECACHE_ASSETS = [
+  publicPath('/'),
+  publicPath('/manifest.json'),
+  publicPath('/build/index.js'),
+];
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     (async () => {
-      const cache = await caches.open(CACHE_NAME);
-      cache.addAll(PRECACHE_ASSETS);
-      fetch('/manifest.json')
-        .then((response) => response.json())
-        .then((manifest) => {
-          const assetUrls = manifest.files.map((file: string) => `/assets/${file}`);
-          cache.addAll(assetUrls);
+      await caches.keys().then((cacheNames) => {
+        cacheNames.forEach((name) => {
+          caches.delete(name);
         });
+      });
+
+      const cache = await caches.open(CACHE_NAME);
+
+      const response = await fetch(publicPath('/manifest.json'));
+      const manifest = await response.json();
+      const assetUrls = manifest.files.map((file: string) => publicPath(`/assets/${file}`));
+
+      [...assetUrls, ...PRECACHE_ASSETS].forEach(async (url) => {
+        const response = await fetch(url + '?v=' + Date.now().toString());
+        cache.put(url, response);
+      });
+      console.log('SW install');
     })()
   );
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(clients.claim());
+  console.log('SW activate');
 });
 
 self.addEventListener('fetch', async (event) => {
