@@ -23,7 +23,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/crypto-price/",
+  "start_url": "/crypto-price",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff",
