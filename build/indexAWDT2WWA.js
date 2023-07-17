@@ -48385,7 +48385,6 @@ Please use another name.` : formatMuiErrorMessage(18));
       []
     );
     (0, import_react15.useEffect)(() => {
-      console.log(1);
       setMode(prefersDarkMode ? "dark" : "light");
     }, [prefersDarkMode]);
     return /* @__PURE__ */ import_react15.default.createElement(CustomThemeContext.Provider, { value: themeMode }, /* @__PURE__ */ import_react15.default.createElement(ThemeProvider, { theme }, children));
@@ -48633,4 +48632,4 @@ react/cjs/react-jsx-runtime.development.js:
    * LICENSE file in the root directory of this source tree.
    *)
 */
-//# sourceMappingURL=indexQAVGFVY3.js.map
+//# sourceMappingURL=indexAWDT2WWA.js.map

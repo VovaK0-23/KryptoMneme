@@ -20,6 +20,7 @@
         cache.addAll(assetUrls);
       })()
     );
+    self.skipWaiting();
   });
   self.addEventListener("activate", (event) => {
     console.log("SW activate");
@@ -42,4 +43,4 @@
   });
   var sw_default = null;
 })();
-//# sourceMappingURL=swAUT5APNO.js.map
+//# sourceMappingURL=swEKFI2V6A.js.map
