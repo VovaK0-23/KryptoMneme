@@ -5,14 +5,8 @@ declare const clients: Clients;
 
 const CACHE_NAME = 'crypto-price-cache' + SW_VERSION;
 
-const publicPath = (str: string) => PUBLIC_PATH + str;
-
 // Add whichever assets you want to pre-cache here:
-const PRECACHE_ASSETS = [
-  publicPath('/'),
-  publicPath('/manifest.json'),
-  publicPath('/build/index.js'),
-];
+const PRECACHE_ASSETS = ['/', '/manifest.json', '/build/index.js'];
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -26,13 +20,14 @@ self.addEventListener('install', (event) => {
 
       const cache = await caches.open(CACHE_NAME);
 
-      const response = await fetch(publicPath('/manifest.json'));
+      const response = await fetch(PUBLIC_PATH + '/manifest.json');
       const manifest = await response.json();
-      const assetUrls = manifest.files.map((file: string) => publicPath(`/assets/${file}`));
+      const assetUrls = manifest.files.map((file: string) => `/assets/${file}`);
 
       [...assetUrls, ...PRECACHE_ASSETS].forEach(async (url) => {
-        const response = await fetch(url + '?v=' + Date.now().toString());
-        cache.put(url, response);
+        const fullUrl = PUBLIC_PATH + url;
+        const response = await fetch(fullUrl + '?v=' + Date.now().toString());
+        cache.put(fullUrl, response);
       });
       console.log('SW install');
     })()
@@ -48,6 +43,8 @@ self.addEventListener('fetch', async (event) => {
   event.respondWith(
     caches.open(CACHE_NAME).then((cache) =>
       cache.match(event.request).then((response) => {
+        if (NODE_ENV === 'development') return fetch(event.request);
+
         if (response) return response;
         else return fetch(event.request);
       })
