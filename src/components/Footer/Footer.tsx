@@ -19,7 +19,7 @@ export const Footer = () => {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
           flexWrap: 'wrap',
         }}
       >
@@ -33,7 +33,7 @@ export const Footer = () => {
         </Box>
 
         <Typography variant='body2' color='textSecondary'>
-          &copy; {new Date().getFullYear()} VovaK0. All rights reserved.
+          &copy; {new Date().getFullYear()} Vova Kahramanov. All rights reserved.
         </Typography>
 
         <Box sx={{ display: 'flex', alignItems: 'center' }}>

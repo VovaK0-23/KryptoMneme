@@ -5,26 +5,38 @@ import React, { useContext } from 'react';
 import logo from '@/assets/logo.png';
 import { HideOnScroll } from '@/components/HideOnScroll';
 import { Search } from '@/components/Search';
+import { CurrencyContext } from '@/contexts/CurrencyContext';
 import { CustomThemeContext } from '@/contexts/CustomThemeContext';
+
+import { CurrencySelector } from '../CurrencySelector';
 
 export const Header = () => {
   const theme = useTheme();
   const themeMode = useContext(CustomThemeContext);
+  const { currencies, currentCurrency, changeCurrentCurrency } = useContext(CurrencyContext);
 
   return (
     <>
       <HideOnScroll>
         <AppBar color='default'>
-          <Toolbar>
+          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <IconButton>
               <img src={logo} width='24' />
             </IconButton>
-            <Box sx={{ flexGrow: 1 }} />
+
             <Search />
-            <Box sx={{ flexGrow: 1 }} />
-            <IconButton onClick={themeMode.toggle}>
-              {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
-            </IconButton>
+
+            <Box sx={{ display: 'flex' }}>
+              <CurrencySelector
+                currencies={currencies}
+                currentCurrency={currentCurrency}
+                onChange={changeCurrentCurrency}
+              />
+
+              <IconButton onClick={themeMode.toggle}>
+                {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+              </IconButton>
+            </Box>
           </Toolbar>
         </AppBar>
       </HideOnScroll>

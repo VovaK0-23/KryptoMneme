@@ -9,4 +9,12 @@ export const localStorageService = {
       return localStorage.getItem('themeMode') as PaletteMode | null;
     },
   },
+  currentCurrency: {
+    set: (currency: string) => {
+      localStorage.setItem('currentCurrency', currency);
+    },
+    get: (): string | null => {
+      return localStorage.getItem('currentCurrency');
+    },
+  },
 };

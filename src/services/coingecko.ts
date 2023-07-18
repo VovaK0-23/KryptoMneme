@@ -12,6 +12,16 @@ export const CoinGeckoService = {
     );
     return res;
   },
+  supportedVsCurrencies: async () => {
+    const res = await fetchJson<string[]>(
+      `https://api.coingecko.com/api/v3/simple/supported_vs_currencies`,
+      {
+        method: 'GET',
+      },
+      formatErrors
+    );
+    return res;
+  },
 };
 
 const formatErrors = (res: CustomError): CustomError => {

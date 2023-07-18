@@ -44,6 +44,9 @@ export const Search = () => {
   return (
     <>
       <Autocomplete
+        sx={{
+          width: '50%',
+        }}
         autoHighlight
         filterSelectedOptions
         freeSolo
@@ -53,7 +56,6 @@ export const Search = () => {
         noOptionsText='No results'
         options={options}
         size='small'
-        sx={{ width: '50%' }}
         onInputChange={(_, newInputValue) => {
           setInputValue(newInputValue);
         }}
