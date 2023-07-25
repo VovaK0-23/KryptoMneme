@@ -1,38 +1,35 @@
-import { Autocomplete, Grid, TextField } from '@mui/material';
+import { Autocomplete, Popper, TextField } from '@mui/material';
 import { debounce } from '@mui/material/utils';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 import { ErrorContext } from '@/contexts/ErrorContext';
-import { CoinGeckoService } from '@/services/coingecko';
+import { SearchCoinsContext } from '@/contexts/SearchCoinsContext';
+import { CoinGeckoService, GeckoSearchCoin } from '@/services/coingecko';
 
-export type GeckoCoin = {
-  id: string;
-  name: string;
-  api_symbol: string;
-  symbol: string;
-  market_cap_rank: number;
-  thumb: string;
-  large: string;
-};
+import { CoinNameWithThumb } from '../CoinNameWithThumb';
 
 export const Search = () => {
   const [inputValue, setInputValue] = useState('');
-  const [options, setOptions] = useState<readonly GeckoCoin[]>([]);
-  const [, errorsDispatch] = useContext(ErrorContext);
+  const [options, setOptions] = useState<GeckoSearchCoin[]>([]);
+  const { dispatchError } = useContext(ErrorContext);
+  const { setSearchCoins, setSearchLoading } = useContext(SearchCoinsContext);
 
   const search = useCallback(
     debounce(async (input: string) => {
+      setSearchLoading(true);
       const res = await CoinGeckoService.search(input);
       if (res.ok) {
         const coins = res.data.coins;
+        setSearchCoins([...coins]);
         coins.length = Math.min(coins.length, 100);
         setOptions(coins);
       } else {
-        errorsDispatch({
+        dispatchError({
           type: 'ADD',
           payload: res.error,
         });
       }
+      setSearchLoading(false);
     }, 1000),
     []
   );
@@ -47,40 +44,33 @@ export const Search = () => {
         sx={{
           width: '50%',
         }}
-        autoHighlight
         filterSelectedOptions
         freeSolo
+        noOptionsText='No results'
+        size='small'
+        value={inputValue}
+        options={options}
         getOptionLabel={(option) =>
           typeof option === 'string' ? option : `${option.name} ${option.symbol}`
         }
-        noOptionsText='No results'
-        options={options}
-        size='small'
         onInputChange={(_, newInputValue) => {
           setInputValue(newInputValue);
         }}
-        value={inputValue}
         onChange={(_, option) => {
           const name = typeof option === 'string' ? option : option?.name;
-          if (name) setInputValue(name);
+          setTimeout(() => {
+            setInputValue(name ?? '');
+          }, 0);
         }}
         renderInput={(params) => (
           <TextField {...params} color='secondary' label='Search...' fullWidth />
         )}
-        renderOption={(props, option) => {
-          return (
-            <li {...props} key={option.id}>
-              <Grid container alignItems='center'>
-                <Grid item sx={{ display: 'flex', width: 44 }}>
-                  <img src={option.thumb} />
-                </Grid>
-                <Grid item sx={{ width: 'calc(100% - 44px)', wordWrap: 'break-word' }}>
-                  {option.name}
-                </Grid>
-              </Grid>
-            </li>
-          );
-        }}
+        renderOption={(props, option) => (
+          <li {...props} key={option.id}>
+            <CoinNameWithThumb coin={option} />
+          </li>
+        )}
+        PopperComponent={(props) => <Popper {...props} sx={{ minWidth: '10rem' }} />}
       />
     </>
   );

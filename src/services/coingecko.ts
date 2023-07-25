@@ -1,9 +1,25 @@
-import { GeckoCoin } from '@/components/Search';
 import { CustomError, fetchJson } from '@/utils';
+
+export type GeckoSearchCoin = {
+  id: string;
+  name: string;
+  api_symbol: string;
+  symbol: string;
+  market_cap_rank: number;
+  thumb: string;
+  large: string;
+};
+
+export type GeckoSimplePriceCoin = {
+  price?: number;
+  market_cap?: number;
+  daily_vol?: number;
+  daily_change?: number;
+};
 
 export const CoinGeckoService = {
   search: async (input: string) => {
-    const res = await fetchJson<{ coins: GeckoCoin[] }>(
+    const res = await fetchJson<{ coins: GeckoSearchCoin[] }>(
       `https://api.coingecko.com/api/v3/search?query=${input}`,
       {
         method: 'GET',
@@ -21,6 +37,38 @@ export const CoinGeckoService = {
       formatErrors
     );
     return res;
+  },
+  simplePrice: async (ids: string[], currency: string) => {
+    const obj = {
+      ids: ids.join(','),
+      vs_currencies: currency,
+      include_market_cap: 'true',
+      include_24hr_vol: 'true',
+      include_24hr_change: 'true',
+    };
+    const params = new URLSearchParams(Object.entries(obj)).toString();
+
+    const res = await fetchJson(
+      `https://api.coingecko.com/api/v3/simple/price?${params}`,
+      {
+        method: 'GET',
+      },
+      formatErrors
+    );
+
+    if (res.ok) {
+      res.data = Object.entries(res.data).reduce((coinsData, [name, data]) => {
+        coinsData[name] = {
+          price: data[currency],
+          market_cap: data[`${currency}_market_cap`],
+          daily_change: data[`${currency}_24h_change`],
+          daily_vol: data[`${currency}_24h_vol`],
+        };
+        return coinsData;
+      }, {} as Record<string, GeckoSimplePriceCoin>);
+
+      return res as { ok: true; data: Record<string, GeckoSimplePriceCoin> };
+    } else return res;
   },
 };
 
