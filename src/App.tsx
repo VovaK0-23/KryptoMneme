@@ -1,14 +1,17 @@
-import { Box, CssBaseline } from '@mui/material';
 import React from 'react';
 
-import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { ErrorSnackbar } from '@/components/ErrorSnackbar';
-import { Footer } from '@/components/Footer';
-import { Header } from '@/components/Header';
+import { Box, CssBaseline } from '@mui/material';
+
 import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import { CustomThemeProvider } from '@/contexts/CustomThemeContext';
 import { ErrorProvider } from '@/contexts/ErrorContext';
 import { SearchCoinsProvider } from '@/contexts/SearchCoinsContext';
+
+import { ErrorSnackbar } from '@/components/ErrorSnackbar';
+import { Footer } from '@/components/Footer';
+import { Header } from '@/components/Header';
+
+import { ErrorBoundary } from '@/pages/ErrorBoundary';
 import { Home } from '@/pages/Home';
 
 export const App = () => {

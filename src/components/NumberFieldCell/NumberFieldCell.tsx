@@ -1,5 +1,6 @@
-import { Skeleton, TableCell } from '@mui/material';
 import React, { ReactNode } from 'react';
+
+import { Skeleton, TableCell } from '@mui/material';
 
 import { KeysMatching } from '@/types';
 

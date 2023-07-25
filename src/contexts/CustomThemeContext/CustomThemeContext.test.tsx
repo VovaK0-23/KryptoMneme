@@ -1,7 +1,8 @@
+import React, { useContext } from 'react';
+
 import { useTheme } from '@mui/material';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React, { useContext } from 'react';
 
 import { CustomThemeContext, CustomThemeProvider } from './CustomThemeContext';
 

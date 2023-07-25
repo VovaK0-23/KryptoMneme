@@ -1,5 +1,6 @@
-import { Button, Menu, MenuItem } from '@mui/material';
 import React, { useCallback, useContext, useRef, useState } from 'react';
+
+import { Button, Menu, MenuItem } from '@mui/material';
 
 import { CurrencyContext } from '@/contexts/CurrencyContext';
 

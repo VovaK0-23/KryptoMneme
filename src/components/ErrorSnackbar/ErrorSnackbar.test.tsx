@@ -1,8 +1,10 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import { ErrorContext } from '@/contexts/ErrorContext';
+
 import { StackAction, StackState } from '@/reducers/stackReducer';
 import { CustomError } from '@/utils';
 

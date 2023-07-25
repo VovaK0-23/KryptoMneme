@@ -1,11 +1,13 @@
-import { AppBar, Box, IconButton, Toolbar } from '@mui/material';
 import React from 'react';
 
-import logo from '@/assets/logo.png';
+import { AppBar, Box, IconButton, Toolbar } from '@mui/material';
+
 import { CurrencySelector } from '@/components/CurrencySelector';
 import { HideOnScroll } from '@/components/HideOnScroll';
 import { Search } from '@/components/Search';
 import { ThemeToggleBtn } from '@/components/ThemeToggleBtn';
+
+import logo from '@/assets/logo.png';
 
 export const Header = () => {
   return (

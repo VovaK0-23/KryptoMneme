@@ -1,9 +1,11 @@
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+
 import { Autocomplete, Popper, TextField } from '@mui/material';
 import { debounce } from '@mui/material/utils';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 import { ErrorContext } from '@/contexts/ErrorContext';
 import { SearchCoinsContext } from '@/contexts/SearchCoinsContext';
+
 import { CoinGeckoService, GeckoSearchCoin } from '@/services/coingecko';
 
 import { CoinNameWithThumb } from '../CoinNameWithThumb';

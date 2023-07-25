@@ -2,7 +2,17 @@
   "printWidth": 100,
   "singleQuote": true,
   "jsxSingleQuote": true,
-  "importOrder": ["^@/(.*)$", "^[./]"],
+  "importOrder": [
+    "^react$",
+    "^[^@/.](.*)$",
+    "^[@](?!/)(.*)",
+    "^@/contexts/(.*)$",
+    "^@/components/(.*)$",
+    "^@/pages/(.*)$",
+    "^@/services/(.*)$",
+    "^@/(.*)$",
+    "^[./]"
+  ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true
 }

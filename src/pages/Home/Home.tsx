@@ -1,3 +1,5 @@
+import React, { ChangeEvent, useCallback, useContext, useMemo, useState } from 'react';
+
 import {
   Container,
   Fade,
@@ -11,15 +13,17 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import React, { ChangeEvent, useCallback, useContext, useMemo, useState } from 'react';
 
-import { CoinNameWithThumb } from '@/components/CoinNameWithThumb';
-import { NumberFieldCell } from '@/components/NumberFieldCell/NumberFieldCell';
 import { CurrencyContext } from '@/contexts/CurrencyContext';
 import { ErrorContext } from '@/contexts/ErrorContext';
 import { SearchCoinsContext } from '@/contexts/SearchCoinsContext';
-import { useEffectOnChange } from '@/hooks';
+
+import { CoinNameWithThumb } from '@/components/CoinNameWithThumb';
+import { NumberFieldCell } from '@/components/NumberFieldCell/NumberFieldCell';
+
 import { CoinGeckoService, GeckoSearchCoin, GeckoSimplePriceCoin } from '@/services/coingecko';
+
+import { useEffectOnChange } from '@/hooks';
 import { findOppositeElement } from '@/utils';
 
 export const Home = () => {

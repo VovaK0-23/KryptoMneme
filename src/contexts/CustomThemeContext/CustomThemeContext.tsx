@@ -1,9 +1,11 @@
-import { ThemeProvider } from '@emotion/react';
-import { PaletteMode, createTheme, useMediaQuery } from '@mui/material';
 import React, { ReactNode, createContext, useEffect, useMemo, useState } from 'react';
 
-import { useEffectOnChange } from '@/hooks';
+import { ThemeProvider } from '@emotion/react';
+import { PaletteMode, createTheme, useMediaQuery } from '@mui/material';
+
 import { localStorageService } from '@/services/localStorage';
+
+import { useEffectOnChange } from '@/hooks';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const CustomThemeContext = createContext({ toggle: () => {} });

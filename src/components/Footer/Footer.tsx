@@ -1,6 +1,7 @@
+import React from 'react';
+
 import { GitHub, LinkedIn } from '@mui/icons-material';
 import { AppBar, Box, Container, IconButton, Link, Typography, useTheme } from '@mui/material';
-import React from 'react';
 
 import cgLogoDark from '@/assets/cg_logo_dark.svg';
 import cgLogoLight from '@/assets/cg_logo_light.svg';
