@@ -2,20 +2,20 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event/';
 import * as React from 'react';
 
+import { CurrencyContext } from '@/contexts/CurrencyContext';
+
 import { CurrencySelector } from './CurrencySelector';
 
 describe('CurrencySelector', () => {
   test('renders correctly and triggers onChange event', async () => {
     const currencies = ['usd', 'eur', 'gbp'];
     const currentCurrency = 'usd';
-    const onChange = jest.fn();
+    const changeCurrentCurrency = jest.fn();
 
     render(
-      <CurrencySelector
-        currencies={currencies}
-        currentCurrency={currentCurrency}
-        onChange={onChange}
-      />
+      <CurrencyContext.Provider value={{ currentCurrency, currencies, changeCurrentCurrency }}>
+        <CurrencySelector />
+      </CurrencyContext.Provider>
     );
 
     const currentCurrencyButton = screen.getByText(/USD/);
@@ -29,7 +29,7 @@ describe('CurrencySelector', () => {
     const euroMenuItem = screen.getByText(/EUR/);
     await userEvent.click(euroMenuItem);
 
-    expect(onChange).toHaveBeenCalledWith('eur');
+    expect(changeCurrentCurrency).toHaveBeenCalledWith('eur');
 
     expect(menu).not.toBeInTheDocument();
   });

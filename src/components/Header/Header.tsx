@@ -1,20 +1,13 @@
-import { Brightness4, Brightness7 } from '@mui/icons-material';
-import { AppBar, Box, IconButton, Toolbar, useTheme } from '@mui/material';
-import React, { useContext } from 'react';
+import { AppBar, Box, IconButton, Toolbar } from '@mui/material';
+import React from 'react';
 
 import logo from '@/assets/logo.png';
+import { CurrencySelector } from '@/components/CurrencySelector';
 import { HideOnScroll } from '@/components/HideOnScroll';
 import { Search } from '@/components/Search';
-import { CurrencyContext } from '@/contexts/CurrencyContext';
-import { CustomThemeContext } from '@/contexts/CustomThemeContext';
-
-import { CurrencySelector } from '../CurrencySelector';
+import { ThemeToggleBtn } from '@/components/ThemeToggleBtn';
 
 export const Header = () => {
-  const theme = useTheme();
-  const themeMode = useContext(CustomThemeContext);
-  const { currencies, currentCurrency, changeCurrentCurrency } = useContext(CurrencyContext);
-
   return (
     <>
       <HideOnScroll>
@@ -27,15 +20,8 @@ export const Header = () => {
             <Search />
 
             <Box sx={{ display: 'flex' }}>
-              <CurrencySelector
-                currencies={currencies}
-                currentCurrency={currentCurrency}
-                onChange={changeCurrentCurrency}
-              />
-
-              <IconButton onClick={themeMode.toggle}>
-                {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
-              </IconButton>
+              <CurrencySelector />
+              <ThemeToggleBtn />
             </Box>
           </Toolbar>
         </AppBar>
