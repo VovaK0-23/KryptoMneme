@@ -9,7 +9,11 @@ type RemoveAction = {
   type: 'REMOVE';
 };
 
-export type StackAction<T> = AddAction<T> | RemoveAction;
+type RemoveAllAction = {
+  type: 'REMOVE_ALL';
+};
+
+export type StackAction<T> = AddAction<T> | RemoveAction | RemoveAllAction;
 
 export type StackState<T extends object> = {
   last: Identifiable<T> | null;
@@ -48,6 +52,10 @@ export const stackReducerInit = (initId: number) => {
           all,
           last,
         };
+      case 'REMOVE_ALL':
+        id = initId;
+        return stackInitState;
+
       default:
         return state;
     }

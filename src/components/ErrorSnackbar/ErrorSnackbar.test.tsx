@@ -10,11 +10,14 @@ import { ErrorSnackbar } from './ErrorSnackbar';
 
 describe('ErrorSnackbar', () => {
   test('should render null when there is no error', () => {
-    const errorsDispatchMock = jest.fn();
-    const contextValue = [{ last: null }, errorsDispatchMock] as unknown as [
-      StackState<CustomError>,
-      React.Dispatch<StackAction<CustomError>>
-    ];
+    const dispatchErrorMock = jest.fn();
+    const contextValue = {
+      errors: { last: null },
+      dispatchError: dispatchErrorMock,
+    } as unknown as {
+      errors: StackState<CustomError>;
+      dispatchError: React.Dispatch<StackAction<CustomError>>;
+    };
 
     render(
       <ErrorContext.Provider value={contextValue}>
@@ -25,21 +28,25 @@ describe('ErrorSnackbar', () => {
     const errorSnackbar = screen.queryByRole('alert');
 
     expect(errorSnackbar).not.toBeInTheDocument();
-    expect(errorsDispatchMock).not.toHaveBeenCalled();
+    expect(dispatchErrorMock).not.toHaveBeenCalled();
   });
 
   test('should render error message when there is an error', () => {
-    const errorsDispatchMock = jest.fn();
+    const dispatchErrorMock = jest.fn();
     const error = {
       id: 1,
       name: 'Test Error',
       type: 'default',
       message: 'Something went wrong',
     };
-    const contextValue = [{ last: error }, errorsDispatchMock] as unknown as [
-      StackState<CustomError>,
-      React.Dispatch<StackAction<CustomError>>
-    ];
+
+    const contextValue = {
+      errors: { last: error, all: [error] },
+      dispatchError: dispatchErrorMock,
+    } as unknown as {
+      errors: StackState<CustomError>;
+      dispatchError: React.Dispatch<StackAction<CustomError>>;
+    };
 
     render(
       <ErrorContext.Provider value={contextValue}>
@@ -52,21 +59,25 @@ describe('ErrorSnackbar', () => {
 
     expect(errorSnackbar).toBeInTheDocument();
     expect(errorMessage).toBeInTheDocument();
-    expect(errorsDispatchMock).not.toHaveBeenCalled();
+    expect(dispatchErrorMock).not.toHaveBeenCalled();
   });
 
   test('should remove error when CloseIcon is clicked', async () => {
-    const errorsDispatchMock = jest.fn();
+    const dispatchErrorMock = jest.fn();
     const error = {
       id: 1,
       name: 'Test Error',
       type: 'default',
       message: 'Something went wrong',
     };
-    const contextValue = [{ last: error }, errorsDispatchMock] as unknown as [
-      StackState<CustomError>,
-      React.Dispatch<StackAction<CustomError>>
-    ];
+
+    const contextValue = {
+      errors: { last: error, all: [error] },
+      dispatchError: dispatchErrorMock,
+    } as unknown as {
+      errors: StackState<CustomError>;
+      dispatchError: React.Dispatch<StackAction<CustomError>>;
+    };
 
     render(
       <ErrorContext.Provider value={contextValue}>
@@ -77,6 +88,6 @@ describe('ErrorSnackbar', () => {
     const closeIcon = screen.getByTestId('CloseIcon');
     await userEvent.click(closeIcon);
 
-    expect(errorsDispatchMock).toHaveBeenCalledWith({ type: 'REMOVE' });
+    expect(dispatchErrorMock).toHaveBeenCalledWith({ type: 'REMOVE' });
   });
 });

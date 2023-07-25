@@ -3,17 +3,20 @@ import React, { Dispatch, ReactNode, createContext, useMemo, useReducer } from '
 import { StackAction, StackState, stackInitState, stackReducerInit } from '@/reducers/stackReducer';
 import { CustomError } from '@/utils';
 
-export const ErrorContext = createContext<
-  [StackState<CustomError>, Dispatch<StackAction<CustomError>>]
->([
-  stackInitState,
+export const ErrorContext = createContext<{
+  errors: StackState<CustomError>;
+  dispatchError: Dispatch<StackAction<CustomError>>;
+}>({
+  errors: stackInitState,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  () => {},
-]);
+  dispatchError: () => {},
+});
 
 export const ErrorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const stackReducer = useMemo(() => stackReducerInit(0)<CustomError>, []);
-  const reducer = useReducer(stackReducer, stackInitState);
+  const [errors, dispatchError] = useReducer(stackReducer, stackInitState);
 
-  return <ErrorContext.Provider value={reducer}>{children}</ErrorContext.Provider>;
+  return (
+    <ErrorContext.Provider value={{ errors, dispatchError }}>{children}</ErrorContext.Provider>
+  );
 };

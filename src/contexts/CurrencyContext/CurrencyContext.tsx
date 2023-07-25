@@ -28,7 +28,7 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
     localStorageService.currentCurrency.get() ?? 'usd'
   );
   const [currencies, setCurrencies] = useState(['usd', 'btc']);
-  const [, errorsDispatch] = useContext(ErrorContext);
+  const { dispatchError } = useContext(ErrorContext);
 
   const changeCurrentCurrency = useCallback((currency: string) => {
     localStorageService.currentCurrency.set(currency);
@@ -42,7 +42,7 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
         const currencies = res.data.sort();
         setCurrencies(currencies);
       } else {
-        errorsDispatch({
+        dispatchError({
           type: 'ADD',
           payload: res.error,
         });
