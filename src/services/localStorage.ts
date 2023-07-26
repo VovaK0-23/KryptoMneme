@@ -1,6 +1,6 @@
 import { PaletteMode } from '@mui/material';
 
-export const LSService = {
+export const LStorageService = {
   themeMode: {
     set: (mode: PaletteMode) => {
       localStorage.setItem('themeMode', mode);

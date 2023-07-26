@@ -3,7 +3,7 @@ import React, { ReactNode, createContext, useContext, useEffect, useState } from
 import { useLocation } from 'react-router-dom';
 
 import { CoinGeckoService } from '@/services/coingecko';
-import { LSService } from '@/services/localStorage';
+import { LStorageService } from '@/services/localStorage';
 
 import { useEffectOnChange } from '@/hooks';
 
@@ -25,7 +25,7 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
   const { searchParams, setSearchParams } = useContext(SearchParamsContext);
   const { dispatchError } = useContext(ErrorContext);
   const [currentCurrency, setCurrentCurrency] = useState(
-    searchParams.get('currency') ?? LSService.currentCurrency.get() ?? 'usd'
+    searchParams.get('currency') ?? LStorageService.currentCurrency.get() ?? 'usd'
   );
   const [currencies, setCurrencies] = useState(['usd', 'btc']);
 
@@ -35,7 +35,7 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
     setCurrentCurrency(currency);
     searchParams.set('currency', currency);
     setSearchParams(searchParams);
-    LSService.currentCurrency.set(currency);
+    LStorageService.currentCurrency.set(currency);
   };
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
   }, [location.pathname]);
 
   useEffectOnChange(() => {
-    setCurrentCurrency(searchParams.get('currency') ?? 'usd');
+    setCurrentCurrency(searchParams.get('currency') ?? currentCurrency);
   }, [searchParams.get('currency')]);
 
   return (

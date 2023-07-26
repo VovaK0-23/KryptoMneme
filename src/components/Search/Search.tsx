@@ -10,7 +10,7 @@ import { SearchCoinsContext } from '@/contexts/SearchCoinsContext';
 import { SearchParamsContext } from '@/contexts/SearchParamsContext';
 
 import { CoinGeckoService, GeckoSearchCoin } from '@/services/coingecko';
-import { LSService } from '@/services/localStorage';
+import { LStorageService } from '@/services/localStorage';
 
 import { useEffectOnChange } from '@/hooks';
 
@@ -22,7 +22,7 @@ export const Search = () => {
   const { setSearchCoins, setSearchLoading } = useContext(SearchCoinsContext);
 
   const [inputValue, setInputValue] = useState(
-    searchParams.get('q') ?? LSService.searchQuery.get() ?? ''
+    searchParams.get('q') ?? LStorageService.searchQuery.get() ?? ''
   );
   const [options, setOptions] = useState<GeckoSearchCoin[]>([]);
 
@@ -32,7 +32,7 @@ export const Search = () => {
   const handleInputChange = (input: string) => {
     searchParams.set('q', input);
     setSearchParams(searchParams);
-    LSService.searchQuery.set(input);
+    LStorageService.searchQuery.set(input);
     setInputValue(input);
   };
 
