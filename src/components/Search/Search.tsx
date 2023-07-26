@@ -12,13 +12,13 @@ import { SearchParamsContext } from '@/contexts/SearchParamsContext';
 import { CoinGeckoService, GeckoSearchCoin } from '@/services/coingecko';
 import { LStorageService } from '@/services/localStorage';
 
-import { useEffectOnChange } from '@/hooks';
+import { useEffectAfterRender } from '@/hooks';
 
 import { CoinNameWithThumb } from '../CoinNameWithThumb';
 
 export const Search = () => {
-  const { searchParams, setSearchParams } = useContext(SearchParamsContext);
   const { dispatchError } = useContext(ErrorContext);
+  const { searchParams, setSearchParams } = useContext(SearchParamsContext);
   const { setSearchCoins, setSearchLoading } = useContext(SearchCoinsContext);
 
   const [inputValue, setInputValue] = useState(
@@ -67,7 +67,7 @@ export const Search = () => {
     }
   }, [location.pathname]);
 
-  useEffectOnChange(() => {
+  useEffectAfterRender(() => {
     setInputValue(searchParams.get('q') ?? '');
   }, [searchParams.get('q')]);
 

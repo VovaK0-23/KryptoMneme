@@ -16,21 +16,33 @@ import {
 import { CurrencyContext } from '@/contexts/CurrencyContext';
 import { ErrorContext } from '@/contexts/ErrorContext';
 import { SearchCoinsContext } from '@/contexts/SearchCoinsContext';
+import { SearchParamsContext } from '@/contexts/SearchParamsContext';
 
 import { CoinRow } from '@/components/CoinRow';
 
 import { CoinGeckoService, GeckoSearchCoin, GeckoSimplePriceCoin } from '@/services/coingecko';
+import { LStorageService } from '@/services/localStorage';
 
-import { useEffectOnChange } from '@/hooks';
+import { useEffectAfterRender } from '@/hooks';
 
 export const Home = () => {
-  const { searchCoins, searchLoading } = useContext(SearchCoinsContext);
   const { currentCurrency } = useContext(CurrencyContext);
   const { dispatchError } = useContext(ErrorContext);
+  const { searchCoins, searchLoading } = useContext(SearchCoinsContext);
+  const { searchParams, setSearchParams } = useContext(SearchParamsContext);
+
   const [coinsInfo, setCoinsInfo] = useState<Record<string, GeckoSimplePriceCoin>>({});
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(() => {
+    const paramPage = searchParams.get('page');
+    const storagePage = LStorageService.page.get() ?? 0;
+    return paramPage ? parseInt(paramPage) : storagePage;
+  });
   const perPageOptions = [5, 10, 25];
-  const [perPage, setPerPage] = useState(perPageOptions[1]);
+  const [perPage, setPerPage] = useState(() => {
+    const paramPerPage = searchParams.get('perPage');
+    const storagePerPage = LStorageService.perPage.get() ?? perPageOptions[1];
+    return paramPerPage ? parseInt(paramPerPage) : storagePerPage;
+  });
 
   const visibleCoins = useMemo(
     () => searchCoins.slice(page * perPage, page * perPage + perPage),
@@ -62,9 +74,23 @@ export const Home = () => {
     if (visibleCoins.length > 0) getPrice(visibleCoins, currentCurrency);
   }, [visibleCoins, currentCurrency]);
 
-  useEffectOnChange(() => {
-    setPage(0);
-  }, [searchCoins, perPage]);
+  useEffectAfterRender(
+    () => {
+      setPage(0);
+    },
+    [searchCoins, perPage],
+    2
+  );
+
+  useEffect(() => {
+    const pageS = page.toString();
+    const perPageS = perPage.toString();
+    searchParams.set('page', pageS);
+    searchParams.set('perPage', perPageS);
+    setSearchParams(searchParams);
+    LStorageService.page.set(pageS);
+    LStorageService.perPage.set(perPageS);
+  }, [page, perPage]);
 
   return (
     <Container>

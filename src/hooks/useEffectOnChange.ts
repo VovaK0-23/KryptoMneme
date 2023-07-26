@@ -1,11 +1,12 @@
 import { DependencyList, EffectCallback, useEffect, useRef } from 'react';
 
-export const useEffectOnChange = (effect: EffectCallback, deps: DependencyList) => {
-  const isInitialRender = useRef(true);
+// useEffectAfterRender executes the effect function after a specified number of renders.
+export const useEffectAfterRender = (effect: EffectCallback, deps: DependencyList, times = 1) => {
+  const renders = useRef(0);
 
   useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
+    if (renders.current < times) {
+      renders.current++;
     } else {
       return effect();
     }

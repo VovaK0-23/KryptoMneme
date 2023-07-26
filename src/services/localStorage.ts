@@ -25,4 +25,22 @@ export const LStorageService = {
       return localStorage.getItem('searchQuery');
     },
   },
+  page: {
+    set: (page: string) => {
+      localStorage.setItem('page', page);
+    },
+    get: (): number | null => {
+      const page = localStorage.getItem('page');
+      return page ? parseInt(page) : null;
+    },
+  },
+  perPage: {
+    set: (perPage: string) => {
+      localStorage.setItem('perPage', perPage);
+    },
+    get: (): number | null => {
+      const perPage = localStorage.getItem('perPage');
+      return perPage ? parseInt(perPage) : null;
+    },
+  },
 };

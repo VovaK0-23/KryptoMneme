@@ -5,7 +5,7 @@ import { PaletteMode, createTheme, useMediaQuery } from '@mui/material';
 
 import { LStorageService } from '@/services/localStorage';
 
-import { useEffectOnChange } from '@/hooks';
+import { useEffectAfterRender } from '@/hooks';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const CustomThemeContext = createContext({ toggle: () => {} });
@@ -41,7 +41,7 @@ export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
     []
   );
 
-  useEffectOnChange(() => {
+  useEffectAfterRender(() => {
     const newMode = prefersDarkMode ? 'dark' : 'light';
     LStorageService.themeMode.set(newMode);
     setMode(newMode);

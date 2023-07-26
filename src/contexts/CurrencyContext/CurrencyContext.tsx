@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { CoinGeckoService } from '@/services/coingecko';
 import { LStorageService } from '@/services/localStorage';
 
-import { useEffectOnChange } from '@/hooks';
+import { useEffectAfterRender } from '@/hooks';
 
 import { ErrorContext } from '../ErrorContext';
 import { SearchParamsContext } from '../SearchParamsContext';
@@ -58,7 +58,7 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
     setSearchParams(searchParams);
   }, [location.pathname]);
 
-  useEffectOnChange(() => {
+  useEffectAfterRender(() => {
     setCurrentCurrency(searchParams.get('currency') ?? currentCurrency);
   }, [searchParams.get('currency')]);
 
