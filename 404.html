@@ -3,9 +3,8 @@
   <head>
     <title>Page Not Found</title>
     <script>
-      const url = window.location.href;
-      const newUrl = url.replace(/\/404\.html$/, '/crypto-price');
-      window.location.replace(newUrl);
+      const url = window.location.origin;
+      window.location.replace(url + '/crypto-price');
     </script>
   </head>
   <body>
