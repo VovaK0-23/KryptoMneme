@@ -1,6 +1,6 @@
 import { PaletteMode } from '@mui/material';
 
-export const localStorageService = {
+export const LSService = {
   themeMode: {
     set: (mode: PaletteMode) => {
       localStorage.setItem('themeMode', mode);
@@ -15,6 +15,14 @@ export const localStorageService = {
     },
     get: (): string | null => {
       return localStorage.getItem('currentCurrency');
+    },
+  },
+  searchQuery: {
+    set: (q: string) => {
+      localStorage.setItem('searchQuery', q);
+    },
+    get: (): string | null => {
+      return localStorage.getItem('searchQuery');
     },
   },
 };

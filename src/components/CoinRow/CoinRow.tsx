@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import { Fade, TableCell, TableRow, Typography, useTheme } from '@mui/material';
 
 import { CoinNameWithThumb } from '@/components/CoinNameWithThumb';
@@ -19,6 +21,7 @@ export const CoinRow = (props: {
   const { coin, idx, coinsInfo, perPage, perPageOptions } = props;
   const coinInfo = coinsInfo[coin.id];
   const theme = useTheme();
+  const navigate = useNavigate();
 
   return (
     <Fade
@@ -27,7 +30,7 @@ export const CoinRow = (props: {
         transitionDelay: `${idx * findOppositeElement(perPage, perPageOptions)}ms`,
       }}
     >
-      <TableRow hover>
+      <TableRow hover onClick={() => navigate(coin.id)}>
         <TableCell align='center'>{coin.market_cap_rank}</TableCell>
         <TableCell>
           <CoinNameWithThumb coin={coin} />

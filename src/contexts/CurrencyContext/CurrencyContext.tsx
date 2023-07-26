@@ -1,16 +1,14 @@
-import React, {
-  ReactNode,
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ReactNode, createContext, useContext, useEffect, useState } from 'react';
+
+import { useLocation } from 'react-router-dom';
 
 import { CoinGeckoService } from '@/services/coingecko';
-import { localStorageService } from '@/services/localStorage';
+import { LSService } from '@/services/localStorage';
+
+import { useEffectOnChange } from '@/hooks';
 
 import { ErrorContext } from '../ErrorContext';
+import { SearchParamsContext } from '../SearchParamsContext';
 
 export const CurrencyContext = createContext<{
   changeCurrentCurrency: (currency: string) => void;
@@ -24,16 +22,21 @@ export const CurrencyContext = createContext<{
 });
 
 export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
+  const { searchParams, setSearchParams } = useContext(SearchParamsContext);
+  const { dispatchError } = useContext(ErrorContext);
   const [currentCurrency, setCurrentCurrency] = useState(
-    localStorageService.currentCurrency.get() ?? 'usd'
+    searchParams.get('currency') ?? LSService.currentCurrency.get() ?? 'usd'
   );
   const [currencies, setCurrencies] = useState(['usd', 'btc']);
-  const { dispatchError } = useContext(ErrorContext);
 
-  const changeCurrentCurrency = useCallback((currency: string) => {
-    localStorageService.currentCurrency.set(currency);
+  const location = useLocation();
+
+  const changeCurrentCurrency = (currency: string) => {
     setCurrentCurrency(currency);
-  }, []);
+    searchParams.set('currency', currency);
+    setSearchParams(searchParams);
+    LSService.currentCurrency.set(currency);
+  };
 
   useEffect(() => {
     (async () => {
@@ -49,6 +52,15 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    searchParams.set('currency', currentCurrency);
+    setSearchParams(searchParams);
+  }, [location.pathname]);
+
+  useEffectOnChange(() => {
+    setCurrentCurrency(searchParams.get('currency') ?? 'usd');
+  }, [searchParams.get('currency')]);
 
   return (
     <CurrencyContext.Provider value={{ currencies, currentCurrency, changeCurrentCurrency }}>

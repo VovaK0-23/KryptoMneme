@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Link } from 'react-router-dom';
+
 import { AppBar, Box, IconButton, Toolbar } from '@mui/material';
 
 import { CurrencySelector } from '@/components/CurrencySelector';
@@ -15,9 +17,11 @@ export const Header = () => {
       <HideOnScroll>
         <AppBar color='default'>
           <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <IconButton>
-              <img src={logo} width='24' />
-            </IconButton>
+            <Link to='/'>
+              <IconButton>
+                <img src={logo} width='24' />
+              </IconButton>
+            </Link>
 
             <Search />
 

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useContext, useMemo, useState } from 'react';
+import React, { ChangeEvent, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import {
   Container,
@@ -10,6 +10,7 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  debounce,
 } from '@mui/material';
 
 import { CurrencyContext } from '@/contexts/CurrencyContext';
@@ -36,15 +37,18 @@ export const Home = () => {
     [searchCoins, page, perPage]
   );
 
-  const getPrice = useCallback(async (visibleCoins: GeckoSearchCoin[], currentCurrency: string) => {
-    const res = await CoinGeckoService.simplePrice(
-      visibleCoins.map((coin) => coin.id),
-      currentCurrency
-    );
+  const getPrice = useCallback(
+    debounce(async (visibleCoins: GeckoSearchCoin[], currentCurrency: string) => {
+      const res = await CoinGeckoService.simplePrice(
+        visibleCoins.map((coin) => coin.id),
+        currentCurrency
+      );
 
-    if (res.ok) setCoinsInfo(res.data);
-    else dispatchError({ type: 'ADD', payload: res.error });
-  }, []);
+      if (res.ok) setCoinsInfo(res.data);
+      else dispatchError({ type: 'ADD', payload: res.error });
+    }, 200),
+    []
+  );
 
   const handlePageChange = useCallback((_: unknown, page: number) => {
     setPage(page);
@@ -54,13 +58,13 @@ export const Home = () => {
     setPerPage(+e.target.value);
   }, []);
 
+  useEffect(() => {
+    if (visibleCoins.length > 0) getPrice(visibleCoins, currentCurrency);
+  }, [visibleCoins, currentCurrency]);
+
   useEffectOnChange(() => {
     setPage(0);
   }, [searchCoins, perPage]);
-
-  useEffectOnChange(() => {
-    getPrice(visibleCoins, currentCurrency);
-  }, [visibleCoins, currentCurrency]);
 
   return (
     <Container>

@@ -1,20 +1,40 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { Autocomplete, Popper, TextField } from '@mui/material';
 import { debounce } from '@mui/material/utils';
 
 import { ErrorContext } from '@/contexts/ErrorContext';
 import { SearchCoinsContext } from '@/contexts/SearchCoinsContext';
+import { SearchParamsContext } from '@/contexts/SearchParamsContext';
 
 import { CoinGeckoService, GeckoSearchCoin } from '@/services/coingecko';
+import { LSService } from '@/services/localStorage';
+
+import { useEffectOnChange } from '@/hooks';
 
 import { CoinNameWithThumb } from '../CoinNameWithThumb';
 
 export const Search = () => {
-  const [inputValue, setInputValue] = useState('');
-  const [options, setOptions] = useState<GeckoSearchCoin[]>([]);
+  const { searchParams, setSearchParams } = useContext(SearchParamsContext);
   const { dispatchError } = useContext(ErrorContext);
   const { setSearchCoins, setSearchLoading } = useContext(SearchCoinsContext);
+
+  const [inputValue, setInputValue] = useState(
+    searchParams.get('q') ?? LSService.searchQuery.get() ?? ''
+  );
+  const [options, setOptions] = useState<GeckoSearchCoin[]>([]);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleInputChange = (input: string) => {
+    searchParams.set('q', input);
+    setSearchParams(searchParams);
+    LSService.searchQuery.set(input);
+    setInputValue(input);
+  };
 
   const search = useCallback(
     debounce(async (input: string) => {
@@ -40,30 +60,49 @@ export const Search = () => {
     search(inputValue);
   }, [inputValue]);
 
+  useEffect(() => {
+    if (inputValue) {
+      searchParams.set('q', inputValue);
+      setSearchParams(searchParams);
+    }
+  }, [location.pathname]);
+
+  useEffectOnChange(() => {
+    setInputValue(searchParams.get('q') ?? '');
+  }, [searchParams.get('q')]);
+
   return (
     <>
       <Autocomplete
         sx={{
           width: '50%',
         }}
-        filterSelectedOptions
+        autoComplete
         freeSolo
         noOptionsText='No results'
         size='small'
-        value={inputValue}
+        inputValue={inputValue}
         options={options}
-        getOptionLabel={(option) =>
-          typeof option === 'string' ? option : `${option.name} ${option.symbol}`
-        }
-        onInputChange={(_, newInputValue) => {
-          setInputValue(newInputValue);
+        getOptionLabel={(option) => (typeof option === 'string' ? option : option.name)}
+        filterOptions={(options, { inputValue }) => {
+          const inputValueLowerCase = inputValue.toLowerCase();
+          return options.filter(
+            (option) =>
+              option.name.toLowerCase().includes(inputValueLowerCase) ||
+              option.symbol.toLowerCase().includes(inputValueLowerCase)
+          );
+        }}
+        onInputChange={(e, newInputValue) => {
+          if (e && e.type === 'change') handleInputChange(newInputValue);
         }}
         onChange={(_, option) => {
-          const name = typeof option === 'string' ? option : option?.name;
-          setTimeout(() => {
-            setInputValue(name ?? '');
-          }, 0);
+          if (!option) return handleInputChange('');
+          if (typeof option === 'string') return handleInputChange(option);
+
+          handleInputChange(option.name);
+          navigate(option.id);
         }}
+        componentsProps={{ clearIndicator: { onClick: () => handleInputChange('') } }}
         renderInput={(params) => (
           <TextField {...params} color='secondary' label='Search...' fullWidth />
         )}

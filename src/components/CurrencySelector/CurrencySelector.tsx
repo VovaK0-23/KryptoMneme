@@ -14,10 +14,10 @@ export const CurrencySelector = () => {
 
   const handleClose = useCallback(() => setOpen(false), []);
 
-  const handleChange = useCallback((currency: string) => {
+  const handleChange = (currency: string) => {
     changeCurrentCurrency(currency);
     setOpen(false);
-  }, []);
+  };
 
   return (
     <>

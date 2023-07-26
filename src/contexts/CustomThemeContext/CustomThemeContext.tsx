@@ -3,7 +3,7 @@ import React, { ReactNode, createContext, useEffect, useMemo, useState } from 'r
 import { ThemeProvider } from '@emotion/react';
 import { PaletteMode, createTheme, useMediaQuery } from '@mui/material';
 
-import { localStorageService } from '@/services/localStorage';
+import { LSService } from '@/services/localStorage';
 
 import { useEffectOnChange } from '@/hooks';
 
@@ -33,7 +33,7 @@ export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
       toggle: () => {
         setMode((prevMode) => {
           const newMode = prevMode === 'light' ? 'dark' : 'light';
-          localStorageService.themeMode.set(newMode);
+          LSService.themeMode.set(newMode);
           return newMode;
         });
       },
@@ -43,12 +43,12 @@ export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
 
   useEffectOnChange(() => {
     const newMode = prefersDarkMode ? 'dark' : 'light';
-    localStorageService.themeMode.set(newMode);
+    LSService.themeMode.set(newMode);
     setMode(newMode);
   }, [prefersDarkMode]);
 
   useEffect(() => {
-    setMode(localStorageService.themeMode.get() ?? mode);
+    setMode(LSService.themeMode.get() ?? mode);
   }, []);
 
   return (
