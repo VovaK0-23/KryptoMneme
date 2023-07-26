@@ -100,7 +100,7 @@ export const Search = () => {
           if (typeof option === 'string') return handleInputChange(option);
 
           handleInputChange(option.name);
-          navigate(option.id);
+          navigate('/coin/' + option.id);
         }}
         componentsProps={{ clearIndicator: { onClick: () => handleInputChange('') } }}
         renderInput={(params) => (

@@ -30,7 +30,7 @@ export const CoinRow = (props: {
         transitionDelay: `${idx * findOppositeElement(perPage, perPageOptions)}ms`,
       }}
     >
-      <TableRow hover onClick={() => navigate(coin.id)}>
+      <TableRow hover onClick={() => navigate('/coin/' + coin.id)}>
         <TableCell align='center'>{coin.market_cap_rank}</TableCell>
         <TableCell>
           <CoinNameWithThumb coin={coin} />

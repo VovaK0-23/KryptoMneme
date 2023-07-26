@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Route, HashRouter as Router, Routes } from 'react-router-dom';
 
-import { Box, CssBaseline } from '@mui/material';
+import { Box, Container, CssBaseline } from '@mui/material';
 
 import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import { CustomThemeProvider } from '@/contexts/CustomThemeContext';
@@ -34,7 +34,15 @@ export const App = () => {
                     <Box component='main' sx={{ flex: 1 }}>
                       <Routes>
                         <Route path='/' element={<Home />} />
-                        <Route path='/:coinId' element={<Coin />} />
+                        <Route path='/coin/:coinId' element={<Coin />} />
+                        <Route
+                          path='*'
+                          element={
+                            <Container>
+                              <h1>Page Not Found 404 *_*</h1>
+                            </Container>
+                          }
+                        />
                       </Routes>
                     </Box>
                     <ErrorSnackbar />
