@@ -39,7 +39,7 @@ const config = {
 };
 
 if (args.includes('--build')) {
-  const publicPath = '/crypto-price';
+  const publicPath = '/KryptoMneme';
   try {
     await esbuild.build({
       ...config,
@@ -79,6 +79,7 @@ if (args.includes('--start')) {
         console.info(remoteAddress, status, `"${method} ${path}" [${timeInMS}ms]`);
       },
     });
+    await ctx.rebuild();
     generateManifest();
   } catch (err) {
     console.error('Server failed to start', err);
@@ -90,8 +91,8 @@ function generateManifest(startUrl = '/') {
   const files = fs.readdirSync(outdir + '/assets');
 
   const manifest = {
-    short_name: 'crypto-price',
-    name: 'crypto-price',
+    short_name: 'KryptoMneme',
+    name: 'KryptoMneme',
     icons: [
       {
         src: 'favicon.ico',

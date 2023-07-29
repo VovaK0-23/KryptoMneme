@@ -3,7 +3,7 @@
 declare const self: ServiceWorkerGlobalScope;
 declare const clients: Clients;
 
-const CACHE_NAME = 'crypto-price-cache' + SW_VERSION;
+const CACHE_NAME = 'krypto-mneme-cache' + SW_VERSION;
 
 // Add whichever assets you want to pre-cache here:
 const PRECACHE_ASSETS = ['/', '/manifest.json', '/build/index.js'];
