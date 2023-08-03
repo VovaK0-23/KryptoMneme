@@ -17,6 +17,8 @@ export type GeckoSimplePriceCoin = {
   daily_change?: number;
 };
 
+export type GeckoOhlcData = [number, number, number, number, number];
+
 export const CoinGeckoService = {
   search: async (input: string) => {
     const res = await fetchJson<{ coins: GeckoSearchCoin[] }>(
@@ -69,6 +71,14 @@ export const CoinGeckoService = {
 
       return res as { ok: true; data: Record<string, GeckoSimplePriceCoin> };
     } else return res;
+  },
+  ohlc: async (id: string, currency: string, days: string) => {
+    const res = await fetchJson<GeckoOhlcData[]>(
+      `https://api.coingecko.com/api/v3/coins/${id}/ohlc?vs_currency=${currency}&days=${days}`,
+      { method: 'GET' },
+      formatErrors
+    );
+    return res;
   },
 };
 
