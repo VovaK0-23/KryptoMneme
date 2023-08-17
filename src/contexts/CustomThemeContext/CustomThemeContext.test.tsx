@@ -1,12 +1,30 @@
-import React, { useContext } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 
 import { useTheme } from '@mui/material';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { SettingsState } from '@/reducers/settingsReducer';
+import { DeepPartial } from '@/types';
+
+import { SettingsContext } from '../SettingsContext';
 import { CustomThemeContext, CustomThemeProvider } from './CustomThemeContext';
 
 describe('CustomThemeProvider', () => {
+  const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+    const [settings, setSettings] = useState({ general: { themeMode: 'dark' } });
+
+    const updateSettings = (payload: DeepPartial<SettingsState>) => {
+      setSettings(payload as typeof settings);
+    };
+
+    return (
+      <SettingsContext.Provider value={{ settings: settings as SettingsState, updateSettings }}>
+        {children}
+      </SettingsContext.Provider>
+    );
+  };
+
   it('applies light theme when prefers-color-scheme is light', () => {
     window.matchMedia = jest.fn().mockImplementation((query) => ({
       matches: query === '(prefers-color-scheme: light)',
@@ -20,9 +38,11 @@ describe('CustomThemeProvider', () => {
     };
 
     render(
-      <CustomThemeProvider>
-        <ChildComponent />
-      </CustomThemeProvider>
+      <SettingsProvider>
+        <CustomThemeProvider>
+          <ChildComponent />
+        </CustomThemeProvider>
+      </SettingsProvider>
     );
 
     const childElement = screen.getByTestId('child');
@@ -42,9 +62,11 @@ describe('CustomThemeProvider', () => {
     };
 
     render(
-      <CustomThemeProvider>
-        <ChildComponent />
-      </CustomThemeProvider>
+      <SettingsProvider>
+        <CustomThemeProvider>
+          <ChildComponent />
+        </CustomThemeProvider>
+      </SettingsProvider>
     );
 
     const childElement = screen.getByTestId('child');
@@ -69,9 +91,11 @@ describe('CustomThemeProvider', () => {
     };
 
     render(
-      <CustomThemeProvider>
-        <ChildComponent />
-      </CustomThemeProvider>
+      <SettingsProvider>
+        <CustomThemeProvider>
+          <ChildComponent />
+        </CustomThemeProvider>
+      </SettingsProvider>
     );
 
     const childElement = screen.getByTestId('child');

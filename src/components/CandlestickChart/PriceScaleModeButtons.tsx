@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 
 import { PriceScaleMode } from 'lightweight-charts';
 
@@ -6,7 +6,7 @@ import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 export const PriceScaleModeButtons = (props: {
   mode: PriceScaleMode;
-  setMode: Dispatch<SetStateAction<PriceScaleMode>>;
+  setMode: (mode: PriceScaleMode) => void;
 }) => {
   const { mode, setMode } = props;
 

@@ -1,39 +1,30 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Autocomplete, Popper, TextField } from '@mui/material';
 import { debounce } from '@mui/material/utils';
 
 import { ErrorContext } from '@/contexts/ErrorContext';
 import { SearchCoinsContext } from '@/contexts/SearchCoinsContext';
-import { SearchParamsContext } from '@/contexts/SearchParamsContext';
+import { SettingsContext } from '@/contexts/SettingsContext';
 
 import { CoinGeckoService, GeckoSearchCoin } from '@/services/coingecko';
-import { LStorageService } from '@/services/localStorage';
-
-import { useEffectAfterRender } from '@/hooks';
 
 import { CoinNameWithThumb } from '../CoinNameWithThumb';
 
 export const Search = () => {
   const { dispatchError } = useContext(ErrorContext);
-  const { searchParams, setSearchParams } = useContext(SearchParamsContext);
+  const { settings, updateSettings } = useContext(SettingsContext);
   const { setSearchCoins, setSearchLoading } = useContext(SearchCoinsContext);
 
-  const [inputValue, setInputValue] = useState(
-    searchParams.get('q') ?? LStorageService.searchQuery.get() ?? ''
-  );
+  const { q } = settings.general;
   const [options, setOptions] = useState<GeckoSearchCoin[]>([]);
 
-  const location = useLocation();
   const navigate = useNavigate();
 
-  const handleInputChange = (input: string) => {
-    searchParams.set('q', input);
-    setSearchParams(searchParams);
-    LStorageService.searchQuery.set(input);
-    setInputValue(input);
+  const handleInputChange = (q: string) => {
+    updateSettings({ general: { q } });
   };
 
   const search = useCallback(
@@ -57,19 +48,8 @@ export const Search = () => {
   );
 
   useEffect(() => {
-    search(inputValue);
-  }, [inputValue]);
-
-  useEffect(() => {
-    if (inputValue) {
-      searchParams.set('q', inputValue);
-      setSearchParams(searchParams);
-    }
-  }, [location.pathname]);
-
-  useEffectAfterRender(() => {
-    setInputValue(searchParams.get('q') ?? '');
-  }, [searchParams.get('q')]);
+    search(q);
+  }, [q]);
 
   return (
     <>
@@ -81,7 +61,7 @@ export const Search = () => {
         freeSolo
         noOptionsText='No results'
         size='small'
-        inputValue={inputValue}
+        inputValue={q}
         options={options}
         getOptionLabel={(option) => (typeof option === 'string' ? option : option.name)}
         filterOptions={(options, { inputValue }) => {

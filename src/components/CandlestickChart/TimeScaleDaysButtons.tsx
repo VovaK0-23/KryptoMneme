@@ -1,11 +1,8 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 
-export const TimeScaleDaysButtons = (props: {
-  days: string;
-  setDays: Dispatch<SetStateAction<string>>;
-}) => {
+export const TimeScaleDaysButtons = (props: { days: string; setDays: (days: string) => void }) => {
   const { days, setDays } = props;
 
   const handleDaysChange = (_: unknown, value: string | null) => {

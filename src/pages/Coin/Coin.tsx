@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import { PriceScaleMode } from 'lightweight-charts';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ExpandMore, FitScreenOutlined } from '@mui/icons-material';
@@ -16,31 +15,29 @@ import {
   Typography,
 } from '@mui/material';
 
-import { CurrencyContext } from '@/contexts/CurrencyContext';
 import { ErrorContext } from '@/contexts/ErrorContext';
+import { SettingsContext } from '@/contexts/SettingsContext';
 
 import { CandlestickChart } from '@/components/CandlestickChart';
+import { PriceScaleModeButtons } from '@/components/CandlestickChart';
+import { TimeScaleDaysButtons } from '@/components/CandlestickChart';
 
 import { CoinGeckoService, GeckoOhlcData } from '@/services/coingecko';
-
-import { PriceScaleModeButtons } from './PriceScaleModeButtons';
-import { TimeScaleDaysButtons } from './TimeScaleDaysButtons';
 
 export const Coin = () => {
   const { coinId } = useParams();
   const navigate = useNavigate();
   const { dispatchError } = useContext(ErrorContext);
-  const { currentCurrency } = useContext(CurrencyContext);
   const [ohlcData, setOhlcData] = useState<GeckoOhlcData[]>([]);
-  const [days, setDays] = useState('1');
-  const [autoScale, setAutoScale] = useState(true);
-  const [mode, setMode] = useState(PriceScaleMode.Normal);
+  const { settings, updateSettings } = useContext(SettingsContext);
+  const { currency } = settings.general;
+  const { days, priceAutoScale, priceScaleMode } = settings.coin;
 
   useEffect(() => {
     if (!coinId) return;
 
     (async () => {
-      const res = await CoinGeckoService.ohlc(coinId, currentCurrency, days);
+      const res = await CoinGeckoService.ohlc(coinId, currency, days);
       if (res.ok) setOhlcData(res.data);
       else
         dispatchError({
@@ -48,7 +45,7 @@ export const Coin = () => {
           payload: res.error,
         });
     })();
-  }, [days, currentCurrency]);
+  }, [days, currency]);
 
   if (!coinId) {
     return (
@@ -77,28 +74,36 @@ export const Coin = () => {
               alignItems: 'center',
             }}
           >
-            <PriceScaleModeButtons mode={mode} setMode={setMode} />
+            <PriceScaleModeButtons
+              mode={priceScaleMode}
+              setMode={(priceScaleMode) => updateSettings({ coin: { priceScaleMode } })}
+            />
 
             <ToggleButton
               sx={{ mb: 2 }}
               size='small'
               value='check'
-              selected={autoScale}
+              selected={priceAutoScale}
               title='Price auto scale'
-              onChange={() => setAutoScale(!autoScale)}
+              onChange={() => updateSettings({ coin: { priceAutoScale: !priceAutoScale } })}
             >
               <FitScreenOutlined />
             </ToggleButton>
           </Box>
 
           <Box sx={{ display: 'flex' }}>
-            <TimeScaleDaysButtons days={days} setDays={setDays} />
+            <TimeScaleDaysButtons
+              days={days}
+              setDays={(days) => updateSettings({ coin: { days } })}
+            />
 
             <CandlestickChart
               data={ohlcData}
-              autoScale={autoScale}
-              setAutoScale={setAutoScale}
-              mode={mode}
+              autoScale={priceAutoScale}
+              setAutoScale={(priceAutoScale) => {
+                updateSettings({ coin: { priceAutoScale } });
+              }}
+              mode={priceScaleMode}
             />
           </Box>
         </AccordionDetails>

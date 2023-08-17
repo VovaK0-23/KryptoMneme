@@ -29,13 +29,15 @@ import { useTheme } from '@mui/material';
 export const CandlestickChart = (props: {
   data: [number, number, number, number, number][];
   autoScale: boolean;
-  setAutoScale: Dispatch<SetStateAction<boolean>>;
+  setAutoScale: (autoScale: boolean) => void;
   mode: PriceScaleMode;
 }) => {
   const { data, autoScale, setAutoScale, mode } = props;
+
   const chartEl = useRef<HTMLDivElement>(null);
   const chart = useRef<IChartApi | null>(null);
   const candlestick = useRef<ISeriesApi<'Candlestick'> | null>(null);
+
   const [candlestickData, setCandlestickData] = useState<
     (OhlcData & { time: UTCTimestamp }) | null
   >(null);

@@ -3,20 +3,40 @@ import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event/';
 
-import { CurrencyContext } from '@/contexts/CurrencyContext';
+import { SettingsContext } from '@/contexts/SettingsContext';
+
+import { SettingsState } from '@/reducers/settingsReducer';
+import { DeepPartial } from '@/types';
 
 import { CurrencySelector } from './CurrencySelector';
 
 describe('CurrencySelector', () => {
-  test('renders correctly and triggers onChange event', async () => {
-    const currencies = ['usd', 'eur', 'gbp'];
-    const currentCurrency = 'usd';
-    const changeCurrentCurrency = jest.fn();
+  beforeAll(() => {
+    console.group = jest.fn();
+    console.error = jest.fn();
+    console.info = jest.fn();
+    console.groupEnd = jest.fn();
+  });
 
+  const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const [settings, setSettings] = React.useState({ general: { currency: 'usd' } });
+
+    const updateSettings = (payload: DeepPartial<SettingsState>) => {
+      setSettings(payload as typeof settings);
+    };
+
+    return (
+      <SettingsContext.Provider value={{ settings: settings as SettingsState, updateSettings }}>
+        {children}
+      </SettingsContext.Provider>
+    );
+  };
+
+  test('renders correctly and changes currency', async () => {
     render(
-      <CurrencyContext.Provider value={{ currentCurrency, currencies, changeCurrentCurrency }}>
+      <SettingsProvider>
         <CurrencySelector />
-      </CurrencyContext.Provider>
+      </SettingsProvider>
     );
 
     const currentCurrencyButton = screen.getByText(/USD/);
@@ -27,11 +47,10 @@ describe('CurrencySelector', () => {
     const menu = screen.getByRole('menu');
     expect(menu).toBeInTheDocument();
 
-    const euroMenuItem = screen.getByText(/EUR/);
+    const euroMenuItem = screen.getByText(/BTC/);
     await userEvent.click(euroMenuItem);
 
-    expect(changeCurrentCurrency).toHaveBeenCalledWith('eur');
-
     expect(menu).not.toBeInTheDocument();
+    expect(screen.getByText(/BTC/)).toBeInTheDocument();
   });
 });

@@ -13,36 +13,25 @@ import {
   debounce,
 } from '@mui/material';
 
-import { CurrencyContext } from '@/contexts/CurrencyContext';
 import { ErrorContext } from '@/contexts/ErrorContext';
 import { SearchCoinsContext } from '@/contexts/SearchCoinsContext';
-import { SearchParamsContext } from '@/contexts/SearchParamsContext';
+import { SettingsContext } from '@/contexts/SettingsContext';
 
 import { CoinRow } from '@/components/CoinRow';
 
 import { CoinGeckoService, GeckoSearchCoin, GeckoSimplePriceCoin } from '@/services/coingecko';
-import { LStorageService } from '@/services/localStorage';
 
 import { useEffectAfterRender } from '@/hooks';
 
 export const Home = () => {
-  const { currentCurrency } = useContext(CurrencyContext);
+  const { settings, updateSettings } = useContext(SettingsContext);
   const { dispatchError } = useContext(ErrorContext);
   const { searchCoins, searchLoading } = useContext(SearchCoinsContext);
-  const { searchParams, setSearchParams } = useContext(SearchParamsContext);
+  const { perPage, page } = settings.home;
+  const { currency } = settings.general;
+  const perPageOptions = [5, 10, 25];
 
   const [coinsInfo, setCoinsInfo] = useState<Record<string, GeckoSimplePriceCoin>>({});
-  const [page, setPage] = useState(() => {
-    const paramPage = searchParams.get('page');
-    const storagePage = LStorageService.page.get() ?? 0;
-    return paramPage ? parseInt(paramPage) : storagePage;
-  });
-  const perPageOptions = [5, 10, 25];
-  const [perPage, setPerPage] = useState(() => {
-    const paramPerPage = searchParams.get('perPage');
-    const storagePerPage = LStorageService.perPage.get() ?? perPageOptions[1];
-    return paramPerPage ? parseInt(paramPerPage) : storagePerPage;
-  });
 
   const visibleCoins = useMemo(
     () => searchCoins.slice(page * perPage, page * perPage + perPage),
@@ -63,34 +52,24 @@ export const Home = () => {
   );
 
   const handlePageChange = useCallback((_: unknown, page: number) => {
-    setPage(page);
+    updateSettings({ home: { page } });
   }, []);
 
   const handlePerPageChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setPerPage(+e.target.value);
+    updateSettings({ home: { perPage: +e.target.value } });
   }, []);
 
   useEffect(() => {
-    if (visibleCoins.length > 0) getPrice(visibleCoins, currentCurrency);
-  }, [visibleCoins, currentCurrency]);
+    if (visibleCoins.length > 0) getPrice(visibleCoins, currency);
+  }, [visibleCoins, currency]);
 
   useEffectAfterRender(
     () => {
-      setPage(0);
+      updateSettings({ home: { page: 0 } });
     },
     [searchCoins, perPage],
     2
   );
-
-  useEffect(() => {
-    const pageS = page.toString();
-    const perPageS = perPage.toString();
-    searchParams.set('page', pageS);
-    searchParams.set('perPage', perPageS);
-    setSearchParams(searchParams);
-    LStorageService.page.set(pageS);
-    LStorageService.perPage.set(perPageS);
-  }, [page, perPage]);
 
   return (
     <Container>

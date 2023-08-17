@@ -2,9 +2,7 @@ import React from 'react';
 
 import { RouterProvider, createHashRouter } from 'react-router-dom';
 
-import { Container, CssBaseline } from '@mui/material';
-
-import { CustomThemeProvider } from '@/contexts/CustomThemeContext';
+import { Container } from '@mui/material';
 
 import { ErrorElement } from '@/pages/ErrorElement';
 import { Home } from '@/pages/Home';
@@ -38,10 +36,5 @@ const router = createHashRouter([
 ]);
 
 export const App = () => {
-  return (
-    <CustomThemeProvider>
-      <CssBaseline />
-      <RouterProvider router={router} />
-    </CustomThemeProvider>
-  );
+  return <RouterProvider router={router} />;
 };

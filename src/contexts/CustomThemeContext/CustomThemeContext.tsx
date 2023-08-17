@@ -1,19 +1,18 @@
-import React, { ReactNode, createContext, useEffect, useMemo, useState } from 'react';
+import React, { ReactNode, createContext, useContext, useEffect, useMemo } from 'react';
 
 import { ThemeProvider } from '@emotion/react';
-import { PaletteMode, createTheme, useMediaQuery } from '@mui/material';
+import { createTheme, useMediaQuery } from '@mui/material';
 
-import { LStorageService } from '@/services/localStorage';
-
-import { useEffectAfterRender } from '@/hooks';
+import { SettingsContext } from '../SettingsContext';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const CustomThemeContext = createContext({ toggle: () => {} });
 
 export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const { settings, updateSettings } = useContext(SettingsContext);
+  const mode = settings.general.themeMode;
 
-  const [mode, setMode] = useState<PaletteMode>(prefersDarkMode ? 'dark' : 'light');
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const theme = useMemo(
     () =>
@@ -31,25 +30,15 @@ export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
   const themeMode = useMemo(
     () => ({
       toggle: () => {
-        setMode((prevMode) => {
-          const newMode = prevMode === 'light' ? 'dark' : 'light';
-          LStorageService.themeMode.set(newMode);
-          return newMode;
-        });
+        updateSettings({ general: { themeMode: mode === 'light' ? 'dark' : 'light' } });
       },
     }),
-    []
+    [mode]
   );
 
-  useEffectAfterRender(() => {
-    const newMode = prefersDarkMode ? 'dark' : 'light';
-    LStorageService.themeMode.set(newMode);
-    setMode(newMode);
-  }, [prefersDarkMode]);
-
   useEffect(() => {
-    setMode(LStorageService.themeMode.get() ?? mode);
-  }, []);
+    updateSettings({ general: { themeMode: prefersDarkMode ? 'dark' : 'light' } });
+  }, [prefersDarkMode]);
 
   return (
     <CustomThemeContext.Provider value={themeMode}>

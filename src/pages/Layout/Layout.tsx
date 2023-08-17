@@ -2,12 +2,12 @@ import React from 'react';
 
 import { Outlet } from 'react-router-dom';
 
-import { Box } from '@mui/material';
+import { Box, CssBaseline } from '@mui/material';
 
-import { CurrencyProvider } from '@/contexts/CurrencyContext';
+import { CustomThemeProvider } from '@/contexts/CustomThemeContext';
 import { ErrorProvider } from '@/contexts/ErrorContext';
 import { SearchCoinsProvider } from '@/contexts/SearchCoinsContext';
-import { SearchParamsProvider } from '@/contexts/SearchParamsContext';
+import { SettingsProvider } from '@/contexts/SettingsContext';
 
 import { ErrorSnackbar } from '@/components/ErrorSnackbar';
 import { Footer } from '@/components/Footer';
@@ -15,9 +15,10 @@ import { Header } from '@/components/Header';
 
 export const Layout = () => {
   return (
-    <ErrorProvider>
-      <SearchParamsProvider>
-        <CurrencyProvider>
+    <SettingsProvider>
+      <CustomThemeProvider>
+        <CssBaseline />
+        <ErrorProvider>
           <SearchCoinsProvider>
             <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
               <Header />
@@ -28,8 +29,8 @@ export const Layout = () => {
               <Footer />
             </Box>
           </SearchCoinsProvider>
-        </CurrencyProvider>
-      </SearchParamsProvider>
-    </ErrorProvider>
+        </ErrorProvider>
+      </CustomThemeProvider>
+    </SettingsProvider>
   );
 };
