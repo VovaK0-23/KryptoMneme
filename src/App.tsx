@@ -1,59 +1,47 @@
 import React from 'react';
 
-import { Route, HashRouter as Router, Routes } from 'react-router-dom';
+import { RouterProvider, createHashRouter } from 'react-router-dom';
 
-import { Box, Container, CssBaseline } from '@mui/material';
+import { Container, CssBaseline } from '@mui/material';
 
-import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import { CustomThemeProvider } from '@/contexts/CustomThemeContext';
-import { ErrorProvider } from '@/contexts/ErrorContext';
-import { SearchCoinsProvider } from '@/contexts/SearchCoinsContext';
 
-import { ErrorSnackbar } from '@/components/ErrorSnackbar';
-import { Footer } from '@/components/Footer';
-import { Header } from '@/components/Header';
-
-import { ErrorBoundary } from '@/pages/ErrorBoundary';
+import { ErrorElement } from '@/pages/ErrorElement';
 import { Home } from '@/pages/Home';
 
-import { SearchParamsProvider } from './contexts/SearchParamsContext';
 import { Coin } from './pages/Coin/Coin';
+import { Layout } from './pages/Layout/Layout';
+
+const router = createHashRouter([
+  {
+    element: <Layout />,
+    errorElement: <ErrorElement />,
+    children: [
+      {
+        path: '/',
+        element: <Home />,
+      },
+      {
+        path: '/coin/:coinId',
+        element: <Coin />,
+      },
+      {
+        path: '*',
+        element: (
+          <Container>
+            <h1>Page Not Found 404 *_*</h1>
+          </Container>
+        ),
+      },
+    ],
+  },
+]);
 
 export const App = () => {
   return (
     <CustomThemeProvider>
       <CssBaseline />
-      <ErrorBoundary>
-        <ErrorProvider>
-          <Router future={{ v7_startTransition: true }}>
-            <SearchParamsProvider>
-              <CurrencyProvider>
-                <SearchCoinsProvider>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-                    <Header />
-                    <Box component='main' sx={{ flex: 1 }}>
-                      <Routes>
-                        <Route path='/' element={<Home />} />
-                        <Route path='/coin/:coinId' element={<Coin />} />
-                        <Route
-                          path='*'
-                          element={
-                            <Container>
-                              <h1>Page Not Found 404 *_*</h1>
-                            </Container>
-                          }
-                        />
-                      </Routes>
-                    </Box>
-                    <ErrorSnackbar />
-                    <Footer />
-                  </Box>
-                </SearchCoinsProvider>
-              </CurrencyProvider>
-            </SearchParamsProvider>
-          </Router>
-        </ErrorProvider>
-      </ErrorBoundary>
+      <RouterProvider router={router} />
     </CustomThemeProvider>
   );
 };

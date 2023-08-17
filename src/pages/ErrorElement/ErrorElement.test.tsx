@@ -1,11 +1,13 @@
 import * as React from 'react';
 
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event/';
 
 import { clipboardCopy } from '@/utils';
 
-import { ErrorBoundary } from './ErrorBoundary';
+import { ErrorElement } from './ErrorElement';
 
 jest.mock('@/utils', () => {
   return {
@@ -18,28 +20,22 @@ describe('ErrorBoundary', () => {
     console.error = jest.fn();
   });
 
-  const ChildComponentWithError = ({ error }: { error: Error }) => {
+  const error = new Error('Test Error');
+
+  const ChildComponentWithError = () => {
     throw error;
   };
 
-  test('should render children when there is no error', () => {
-    render(
-      <ErrorBoundary>
-        <div>Child Component</div>
-      </ErrorBoundary>
-    );
-
-    const childComponent = screen.getByText('Child Component');
-    expect(childComponent).toBeInTheDocument();
-  });
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <ChildComponentWithError />,
+      errorElement: <ErrorElement />,
+    },
+  ]);
 
   test('should render error message and stack trace when there is an error', () => {
-    const error = new Error('Test Error');
-    render(
-      <ErrorBoundary>
-        <ChildComponentWithError error={error} />
-      </ErrorBoundary>
-    );
+    render(<RouterProvider router={router} />);
 
     const errorMessage = screen.getByText(/Oops! App crashed/);
     const [errorText] = screen.getAllByText(/Error: Test Error/);
@@ -51,12 +47,7 @@ describe('ErrorBoundary', () => {
   });
 
   test('should copy stack trace when clicking on the code element', async () => {
-    const error = new Error('Test Error');
-    render(
-      <ErrorBoundary>
-        <ChildComponentWithError error={error} />
-      </ErrorBoundary>
-    );
+    render(<RouterProvider router={router} />);
 
     const stackTrace = screen.getByRole('region');
     await userEvent.click(stackTrace);
