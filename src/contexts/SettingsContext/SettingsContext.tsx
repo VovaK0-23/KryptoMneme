@@ -53,7 +53,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
       setSearchParams(searchParams);
       setShouldUpateSettings(false);
     } else setShouldUpateSearchParams(true);
-  }, [settings]);
+  }, [settings, location.pathname]);
 
   useEffect(() => {
     if (shouldUpdateSettings) {
