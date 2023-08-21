@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -15,11 +15,13 @@ import { CoinNameWithThumb } from '../CoinNameWithThumb';
 
 export const Search = () => {
   const { dispatchError } = useContext(ErrorContext);
-  const { settings, updateSettings } = useContext(SettingsContext);
   const { setSearchCoins, setSearchLoading } = useContext(SearchCoinsContext);
+  const { settings, updateSettings } = useContext(SettingsContext);
 
   const { q } = settings.general;
   const [options, setOptions] = useState<GeckoSearchCoin[]>([]);
+
+  const autocompleteRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
 
@@ -43,7 +45,7 @@ export const Search = () => {
         });
       }
       setSearchLoading(false);
-    }, 1000),
+    }, 750),
     []
   );
 
@@ -51,9 +53,23 @@ export const Search = () => {
     search(q);
   }, [q]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 's' && event['altKey']) {
+        event.preventDefault();
+        autocompleteRef.current?.querySelector('input')?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <>
       <Autocomplete
+        ref={autocompleteRef}
         sx={{
           width: '50%',
         }}
@@ -75,17 +91,16 @@ export const Search = () => {
         onInputChange={(e, newInputValue) => {
           if (e && e.type === 'change') handleInputChange(newInputValue);
         }}
-        onChange={(_, option) => {
+        onChange={(e, option) => {
           if (!option) return handleInputChange('');
           if (typeof option === 'string') return handleInputChange(option);
 
           handleInputChange(option.name);
-          navigate('/coin/' + option.id);
+
+          if ('shiftKey' in e && e['shiftKey']) navigate('/coin/' + option.id);
         }}
         componentsProps={{ clearIndicator: { onClick: () => handleInputChange('') } }}
-        renderInput={(params) => (
-          <TextField {...params} color='secondary' label='Search...' fullWidth />
-        )}
+        renderInput={(params) => <TextField {...params} label='Search...' fullWidth />}
         renderOption={(props, option) => (
           <li {...props} key={option.id}>
             <CoinNameWithThumb coin={option} />

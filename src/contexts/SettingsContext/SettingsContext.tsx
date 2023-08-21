@@ -2,6 +2,8 @@ import React, { ReactNode, createContext, useEffect, useReducer, useState } from
 
 import { useLocation, useSearchParams } from 'react-router-dom';
 
+import { useMediaQuery } from '@mui/material';
+
 import {
   SettingsState,
   UpdateAction,
@@ -22,11 +24,12 @@ export const SettingsContext = createContext<{
 
 export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const location = useLocation();
 
   const [settings, dispatchSettings] = useReducer(
     settingsReducer,
-    getInitialState(settingsInitState, searchParams)
+    getInitialState(settingsInitState, searchParams, prefersDarkMode)
   );
 
   const [shouldUpdateSettings, setShouldUpateSettings] = useState(false);
@@ -48,6 +51,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
         searchParams.set('perPage', settings.home.perPage.toString());
       }
       if (settings.general.q) searchParams.set('q', settings.general.q);
+      else searchParams.delete('q');
 
       searchParams.set('currency', settings.general.currency);
       setSearchParams(searchParams);
@@ -69,7 +73,15 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
   );
 };
 
-const getInitialState = (settingsInitState: SettingsState, searchParams: URLSearchParams) => {
+const getInitialState = (
+  settingsInitState: SettingsState,
+  searchParams: URLSearchParams,
+  prefersDarkMode: boolean
+) => {
+  settingsInitState = deepMerge(settingsInitState, {
+    general: { themeMode: prefersDarkMode ? 'dark' : 'light' },
+  });
+
   const localStorageState = localStorage.getItem('settings');
   if (localStorageState) {
     let parsed;
