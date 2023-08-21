@@ -4,11 +4,10 @@ import { RouterProvider, createHashRouter } from 'react-router-dom';
 
 import { Container } from '@mui/material';
 
+import { Coin } from '@/pages/Coin';
 import { ErrorElement } from '@/pages/ErrorElement';
 import { Home } from '@/pages/Home';
-
-import { Coin } from './pages/Coin/Coin';
-import { Layout } from './pages/Layout/Layout';
+import { Layout } from '@/pages/Layout';
 
 const router = createHashRouter([
   {
