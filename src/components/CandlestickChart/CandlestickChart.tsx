@@ -56,10 +56,10 @@ export const CandlestickChart = (props: {
       },
       grid: {
         vertLines: {
-          color: alpha(palette.secondary.main, 0.7),
+          color: alpha(palette.primary.main, 0.5),
         },
         horzLines: {
-          color: alpha(palette.secondary.main, 0.6),
+          color: alpha(palette.primary.main, 0.6),
         },
       },
       rightPriceScale: {

@@ -81,10 +81,10 @@ describe('CustomThemeProvider', () => {
     }));
 
     const ChildComponent = () => {
-      const themeMode = useContext(CustomThemeContext);
+      const { toggleTheme } = useContext(CustomThemeContext);
       const theme = useTheme();
       return (
-        <div data-testid='child' onClick={themeMode.toggle}>
+        <div data-testid='child' onClick={toggleTheme}>
           {theme.palette.mode}
         </div>
       );

@@ -7,10 +7,10 @@ import { CustomThemeContext } from '@/contexts/CustomThemeContext';
 
 export const ThemeToggleBtn = () => {
   const theme = useTheme();
-  const themeMode = useContext(CustomThemeContext);
+  const { toggleTheme } = useContext(CustomThemeContext);
 
   return (
-    <IconButton onClick={themeMode.toggle}>
+    <IconButton onClick={toggleTheme}>
       {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
     </IconButton>
   );

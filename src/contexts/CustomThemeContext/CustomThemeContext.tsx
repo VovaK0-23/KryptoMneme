@@ -1,25 +1,23 @@
-import React, { ReactNode, createContext, useContext, useEffect, useMemo } from 'react';
+import React, { ReactNode, createContext, useCallback, useContext, useMemo } from 'react';
 
 import { ThemeProvider } from '@emotion/react';
-import { createTheme, useMediaQuery } from '@mui/material';
+import { createTheme } from '@mui/material';
 
 import { SettingsContext } from '../SettingsContext';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-export const CustomThemeContext = createContext({ toggle: () => {} });
+export const CustomThemeContext = createContext({ toggleTheme: () => {} });
 
 export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
   const { settings, updateSettings } = useContext(SettingsContext);
   const mode = settings.general.themeMode;
-
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
           mode,
-          secondary: {
+          primary: {
             main: '#ffc107',
           },
         },
@@ -27,21 +25,12 @@ export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
     [mode]
   );
 
-  const themeMode = useMemo(
-    () => ({
-      toggle: () => {
-        updateSettings({ general: { themeMode: mode === 'light' ? 'dark' : 'light' } });
-      },
-    }),
-    [mode]
-  );
-
-  useEffect(() => {
-    updateSettings({ general: { themeMode: prefersDarkMode ? 'dark' : 'light' } });
-  }, [prefersDarkMode]);
+  const toggleTheme = useCallback(() => {
+    updateSettings({ general: { themeMode: mode === 'light' ? 'dark' : 'light' } });
+  }, [mode]);
 
   return (
-    <CustomThemeContext.Provider value={themeMode}>
+    <CustomThemeContext.Provider value={{ toggleTheme }}>
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </CustomThemeContext.Provider>
   );

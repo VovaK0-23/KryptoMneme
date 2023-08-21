@@ -44,7 +44,7 @@ export const CurrencySelector = () => {
 
   return (
     <>
-      <Button color='secondary' ref={btn} onClick={handleOpen}>
+      <Button ref={btn} onClick={handleOpen}>
         {currency.toUpperCase()}
       </Button>
 
