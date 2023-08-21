@@ -1,21 +1,10 @@
 import React, { useState } from 'react';
 
 import { Keyboard } from '@mui/icons-material';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  Tooltip,
-} from '@mui/material';
+import { Drawer, IconButton, List, ListItem, Tooltip } from '@mui/material';
 
 import { ThemeToggleBtn } from '../ThemeToggleBtn';
+import { ShortcutsModal } from '../modals/ShortcutsModal';
 
 export const SettingsDrawer = (props: { open: boolean; onClose: () => void }) => {
   const { open, onClose } = props;
@@ -24,6 +13,7 @@ export const SettingsDrawer = (props: { open: boolean; onClose: () => void }) =>
 
   const handleOpenShortcuts = () => setOpenShortcuts(true);
   const handleCloseShortcuts = () => setOpenShortcuts(false);
+  const handleSaveShortcuts = () => setOpenShortcuts(false);
 
   return (
     <Drawer anchor='right' open={open} onClose={onClose}>
@@ -43,22 +33,11 @@ export const SettingsDrawer = (props: { open: boolean; onClose: () => void }) =>
         </Tooltip>
       </List>
 
-      <Dialog open={openShortcuts} onClose={handleCloseShortcuts} fullScreen>
-        <DialogTitle>Dialog Title</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            This is the content of the dialog. You can put any content here.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseShortcuts} color='primary'>
-            Cancel
-          </Button>
-          <Button onClick={handleCloseShortcuts} color='primary'>
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ShortcutsModal
+        open={openShortcuts}
+        onClose={handleCloseShortcuts}
+        onSave={handleSaveShortcuts}
+      />
     </Drawer>
   );
 };

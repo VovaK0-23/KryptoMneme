@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext, useState } from 'react';
 
-import { useTheme } from '@mui/material';
+import { useMediaQuery, useTheme } from '@mui/material';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -12,7 +12,10 @@ import { CustomThemeContext, CustomThemeProvider } from './CustomThemeContext';
 
 describe('CustomThemeProvider', () => {
   const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [settings, setSettings] = useState({ general: { themeMode: 'dark' } });
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const [settings, setSettings] = useState({
+      general: { themeMode: prefersDarkMode ? 'dark' : 'light' },
+    });
 
     const updateSettings = (payload: DeepPartial<SettingsState>) => {
       setSettings(payload as typeof settings);
@@ -81,10 +84,10 @@ describe('CustomThemeProvider', () => {
     }));
 
     const ChildComponent = () => {
-      const { toggleTheme } = useContext(CustomThemeContext);
+      const { toggleThemeMode } = useContext(CustomThemeContext);
       const theme = useTheme();
       return (
-        <div data-testid='child' onClick={toggleTheme}>
+        <div data-testid='child' onClick={toggleThemeMode}>
           {theme.palette.mode}
         </div>
       );

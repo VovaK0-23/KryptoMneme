@@ -6,7 +6,7 @@ import { createTheme } from '@mui/material';
 import { SettingsContext } from '../SettingsContext';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-export const CustomThemeContext = createContext({ toggleTheme: () => {} });
+export const CustomThemeContext = createContext({ toggleThemeMode: () => {} });
 
 export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
   const { settings, updateSettings } = useContext(SettingsContext);
@@ -18,19 +18,22 @@ export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
         palette: {
           mode,
           primary: {
-            main: '#ffc107',
+            main: '#F79413',
+          },
+          secondary: {
+            main: '#A25AD9',
           },
         },
       }),
     [mode]
   );
 
-  const toggleTheme = useCallback(() => {
+  const toggleThemeMode = useCallback(() => {
     updateSettings({ general: { themeMode: mode === 'light' ? 'dark' : 'light' } });
   }, [mode]);
 
   return (
-    <CustomThemeContext.Provider value={{ toggleTheme }}>
+    <CustomThemeContext.Provider value={{ toggleThemeMode }}>
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </CustomThemeContext.Provider>
   );

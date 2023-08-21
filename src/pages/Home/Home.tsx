@@ -47,7 +47,7 @@ export const Home = () => {
 
       if (res.ok) setCoinsInfo(res.data);
       else dispatchError({ type: 'ADD', payload: res.error });
-    }, 200),
+    }, 250),
     []
   );
 
