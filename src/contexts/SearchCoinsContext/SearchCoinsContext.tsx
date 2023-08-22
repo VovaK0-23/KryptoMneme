@@ -2,17 +2,17 @@ import React, { Dispatch, ReactNode, SetStateAction, createContext, useState } f
 
 import { GeckoSearchCoin } from '@/services/coingecko';
 
+import { noop } from '@/utils';
+
 export const SearchCoinsContext = createContext<{
   setSearchCoins: Dispatch<SetStateAction<GeckoSearchCoin[]>>;
   searchCoins: GeckoSearchCoin[];
   setSearchLoading: Dispatch<SetStateAction<boolean>>;
   searchLoading: boolean;
 }>({
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setSearchCoins: () => {},
+  setSearchCoins: noop,
   searchCoins: [],
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setSearchLoading: () => {},
+  setSearchLoading: noop,
   searchLoading: true,
 });
 

@@ -6,20 +6,19 @@ import { useMediaQuery } from '@mui/material';
 
 import {
   SettingsState,
-  UpdateAction,
-  settingsInitState,
+  UpdateSettingsAction,
+  settingsDefaultState,
   settingsReducer,
 } from '@/reducers/settingsReducer';
 import { DeepPartial } from '@/types';
-import { deepMerge } from '@/utils';
+import { deepMerge, noop } from '@/utils';
 
 export const SettingsContext = createContext<{
   settings: SettingsState;
-  updateSettings: (payload: UpdateAction['payload']) => void;
+  updateSettings: (payload: UpdateSettingsAction['payload']) => void;
 }>({
-  settings: settingsInitState,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  updateSettings: () => {},
+  settings: settingsDefaultState,
+  updateSettings: noop,
 });
 
 export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -29,7 +28,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   const [settings, dispatchSettings] = useReducer(
     settingsReducer,
-    getInitialState(settingsInitState, searchParams, prefersDarkMode)
+    getInitialState(settingsDefaultState, searchParams, prefersDarkMode)
   );
 
   const [shouldUpdateSettings, setShouldUpateSettings] = useState(false);

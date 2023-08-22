@@ -8,15 +8,20 @@ import { debounce } from '@mui/material/utils';
 import { ErrorContext } from '@/contexts/ErrorContext';
 import { SearchCoinsContext } from '@/contexts/SearchCoinsContext';
 import { SettingsContext } from '@/contexts/SettingsContext';
+import { ShortcutsContext } from '@/contexts/ShortcutsContext';
+
+import { CoinNameWithThumb } from '@/components/CoinNameWithThumb';
 
 import { CoinGeckoService, GeckoSearchCoin } from '@/services/coingecko';
 
-import { CoinNameWithThumb } from '../CoinNameWithThumb';
+import { useEffectOnKeyDown } from '@/hooks';
+import { matchesShortcut } from '@/utils';
 
 export const Search = () => {
   const { dispatchError } = useContext(ErrorContext);
   const { setSearchCoins, setSearchLoading } = useContext(SearchCoinsContext);
   const { settings, updateSettings } = useContext(SettingsContext);
+  const { shortcuts } = useContext(ShortcutsContext);
 
   const { q } = settings.general;
   const [options, setOptions] = useState<GeckoSearchCoin[]>([]);
@@ -53,18 +58,12 @@ export const Search = () => {
     search(q);
   }, [q]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 's' && event['altKey']) {
-        event.preventDefault();
-        autocompleteRef.current?.querySelector('input')?.focus();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  useEffectOnKeyDown((event) => {
+    if (matchesShortcut(event, shortcuts.openSearch)) {
+      event.preventDefault();
+      autocompleteRef.current?.querySelector('input')?.focus();
+    }
+  });
 
   return (
     <>

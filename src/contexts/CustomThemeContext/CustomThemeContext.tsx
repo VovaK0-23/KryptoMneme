@@ -3,10 +3,11 @@ import React, { ReactNode, createContext, useCallback, useContext, useMemo } fro
 import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@mui/material';
 
+import { noop } from '@/utils';
+
 import { SettingsContext } from '../SettingsContext';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-export const CustomThemeContext = createContext({ toggleThemeMode: () => {} });
+export const CustomThemeContext = createContext({ toggleThemeMode: noop });
 
 export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
   const { settings, updateSettings } = useContext(SettingsContext);
@@ -19,9 +20,6 @@ export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
           mode,
           primary: {
             main: '#F79413',
-          },
-          secondary: {
-            main: '#A25AD9',
           },
         },
       }),

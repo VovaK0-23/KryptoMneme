@@ -3,7 +3,7 @@ import { PriceScaleMode } from 'lightweight-charts';
 import { DeepPartial } from '@/types';
 import { deepMerge } from '@/utils';
 
-export const settingsInitState = {
+export const settingsDefaultState = {
   general: {
     themeMode: 'dark' as 'dark' | 'light',
     currency: 'usd',
@@ -20,14 +20,14 @@ export const settingsInitState = {
   },
 };
 
-export type SettingsState = typeof settingsInitState;
+export type SettingsState = typeof settingsDefaultState;
 
-export type UpdateAction = {
+export type UpdateSettingsAction = {
   type: 'UPD';
   payload: DeepPartial<SettingsState>;
 };
 
-export type SettingsAction = UpdateAction;
+export type SettingsAction = UpdateSettingsAction;
 
 export const settingsReducer = (state: SettingsState, action: SettingsAction) => {
   switch (action.type) {

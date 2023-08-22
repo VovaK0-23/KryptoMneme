@@ -12,6 +12,7 @@ export const SettingsDrawer = (props: { open: boolean; onClose: () => void }) =>
   const [openShortcuts, setOpenShortcuts] = useState(false);
 
   const handleOpenShortcuts = () => setOpenShortcuts(true);
+
   const handleCloseShortcuts = () => setOpenShortcuts(false);
   const handleSaveShortcuts = () => setOpenShortcuts(false);
 
