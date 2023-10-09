@@ -9,7 +9,7 @@ import { CurrencySelector } from '@/components/CurrencySelector';
 import { HideOnScroll } from '@/components/HideOnScroll';
 import { Search } from '@/components/Search';
 
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo.svg';
 
 import { SettingsDrawer } from '../SettingsDrawer';
 
