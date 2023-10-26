@@ -97,7 +97,7 @@ function generateManifest(startUrl = '/') {
     icons: [
        {
         src: 'favicon.ico',
-        sizes: '64x64',
+        sizes: '48x48',
         type: 'image/x-icon',
       },
       {

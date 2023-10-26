@@ -4,6 +4,8 @@ import { RouterProvider, createHashRouter } from 'react-router-dom';
 
 import { Container } from '@mui/material';
 
+import { ShortcutsModal } from '@/components/modals/ShortcutsModal';
+
 import { Coin } from '@/pages/Coin';
 import { ErrorElement } from '@/pages/ErrorElement';
 import { Home } from '@/pages/Home';
@@ -21,6 +23,10 @@ const router = createHashRouter([
       {
         path: '/coin/:coinId',
         element: <Coin />,
+      },
+      {
+        path: '/shortcuts',
+        element: <ShortcutsModal />,
       },
       {
         path: '*',

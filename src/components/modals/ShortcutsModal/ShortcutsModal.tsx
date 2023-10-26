@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useContext, useReducer } from 'react';
 
 import { cloneDeep } from 'lodash';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Button,
@@ -25,18 +26,14 @@ import {
 } from '@/reducers/shortcutsReducer';
 import { DeepPartial } from '@/types';
 
-export const ShortcutsModal = (props: {
-  open: boolean;
-  onClose: () => void;
-  onSave: () => void;
-}) => {
+export const ShortcutsModal = () => {
   const { shortcuts, updateShortcuts } = useContext(ShortcutsContext);
   const { confirmCustom } = useContext(ConfirmationContext);
-  const { open, onClose, onSave } = props;
   const [localShortcuts, dispatchLocalShortcuts] = useReducer(
     shortcutsReducer,
     cloneDeep(shortcuts)
   );
+  const navigate = useNavigate();
 
   const updateLocalShortcuts = (payload: DeepPartial<ShortcutsState>) => {
     dispatchLocalShortcuts({
@@ -59,12 +56,12 @@ export const ShortcutsModal = (props: {
 
   const handleClose = () => {
     updateLocalShortcuts(shortcuts);
-    onClose();
+    navigate(-2);
   };
 
   const handleSave = () => {
     updateShortcuts(localShortcuts);
-    onSave();
+    navigate(-2);
   };
 
   const handleDefaultClick = async () => {
@@ -77,7 +74,7 @@ export const ShortcutsModal = (props: {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} fullScreen>
+    <Dialog open={true} onClose={handleClose} fullScreen>
       <DialogTitle>Shortcuts</DialogTitle>
 
       <DialogContent>

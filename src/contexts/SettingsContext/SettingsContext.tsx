@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useEffect, useReducer, useState } from 'react';
+import React, { ReactNode, createContext, useEffect, useReducer, useRef, useState } from 'react';
 
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -31,8 +31,8 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
     getInitialState(settingsDefaultState, searchParams, prefersDarkMode)
   );
 
-  const [shouldUpdateSettings, setShouldUpateSettings] = useState(false);
-  const [shouldUpdateSearchParams, setShouldUpateSearchParams] = useState(true);
+  const shouldUpdateSettings = useRef(false);
+  const shouldUpdateSearchParams = useRef(true);
 
   const updateSettings = (payload: DeepPartial<SettingsState>) => {
     dispatchSettings({
@@ -44,7 +44,8 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
   useEffect(() => {
     localStorage.setItem('settings', JSON.stringify(settings));
 
-    if (shouldUpdateSearchParams) {
+    if (shouldUpdateSearchParams.current) {
+      const oldSearchParams = searchParams.toString();
       if (location.pathname === '/') {
         searchParams.set('page', settings.home.page.toString());
         searchParams.set('perPage', settings.home.perPage.toString());
@@ -53,16 +54,18 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
       else searchParams.delete('q');
 
       searchParams.set('currency', settings.general.currency);
-      setSearchParams(searchParams);
-      setShouldUpateSettings(false);
-    } else setShouldUpateSearchParams(true);
+      if (searchParams.toString() !== oldSearchParams) {
+        setSearchParams(searchParams);
+        shouldUpdateSettings.current = false;
+      }
+    } else shouldUpdateSearchParams.current = true;
   }, [settings, location.pathname]);
 
   useEffect(() => {
-    if (shouldUpdateSettings) {
+    if (shouldUpdateSettings.current) {
       updateSettings(mergeSearchParams(settings, searchParams));
-      setShouldUpateSearchParams(false);
-    } else setShouldUpateSettings(true);
+      shouldUpdateSearchParams.current = false;
+    } else shouldUpdateSettings.current = true;
   }, [searchParams]);
 
   return (

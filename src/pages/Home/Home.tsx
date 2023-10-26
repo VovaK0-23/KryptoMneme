@@ -125,7 +125,7 @@ export const Home = () => {
         component='div'
         count={searchCoins.length}
         rowsPerPage={perPage}
-        page={page}
+        page={searchCoins.length ? page : 0}
         showFirstButton
         showLastButton
         onPageChange={handlePageChange}

@@ -45,7 +45,7 @@ export const Coin = () => {
           payload: res.error,
         });
     })();
-  }, [days, currency]);
+  }, [days, currency, coinId]);
 
   if (!coinId) {
     return (
