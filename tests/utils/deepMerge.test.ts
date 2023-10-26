@@ -1,6 +1,5 @@
 import { DeepPartial } from '@/types';
-
-import { deepMerge } from './deepMerge';
+import { deepMerge } from '@/utils/deepMerge';
 
 describe('deepMerge', () => {
   it('should merge objects', () => {

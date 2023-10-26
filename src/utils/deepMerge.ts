@@ -7,7 +7,7 @@ export const deepMerge = <T extends object>(target: T, source: DeepPartial<T>) =
     if (sourceValue !== undefined) {
       if (Array.isArray(sourceValue)) {
         target[key] = sourceValue as T[keyof T];
-      } else if (typeof sourceValue === 'object') {
+      } else if (sourceValue !== null && typeof sourceValue === 'object') {
         deepMerge(target[key], sourceValue);
       } else {
         target[key] = sourceValue;

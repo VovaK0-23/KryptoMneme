@@ -21,7 +21,7 @@ export const shortcutsDefaultState = {
     key: 's',
     mod: 'altKey',
   } as Shortcut,
-};
+} as const;
 
 export type ShortcutsState = typeof shortcutsDefaultState;
 

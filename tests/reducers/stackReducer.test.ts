@@ -1,4 +1,4 @@
-import { StackAction, StackState, stackInitState, stackReducerInit } from './stackReducer';
+import { StackAction, StackState, stackInitState, stackReducerInit } from '@/reducers/stackReducer';
 
 describe('stackReducerInit', () => {
   test('should handle ADD action', () => {

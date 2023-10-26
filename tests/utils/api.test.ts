@@ -1,7 +1,6 @@
 import { ErrorRes, SuccessRes } from '@/types';
-
-import { fetchResult } from './api';
-import { CommonError, RequestError } from './errors';
+import { fetchResult } from '@/utils/api';
+import { CommonError, RequestError } from '@/utils/errors';
 
 describe('fetchResult', () => {
   beforeAll(() => {

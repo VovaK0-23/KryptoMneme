@@ -5,10 +5,10 @@ import userEvent from '@testing-library/user-event/';
 
 import { SettingsContext } from '@/contexts/SettingsContext';
 
+import { CurrencySelector } from '@/components/CurrencySelector';
+
 import { SettingsState } from '@/reducers/settingsReducer';
 import { DeepPartial } from '@/types';
-
-import { CurrencySelector } from './CurrencySelector';
 
 describe('CurrencySelector', () => {
   beforeAll(() => {

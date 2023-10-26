@@ -5,9 +5,9 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event/';
 
-import { clipboardCopy } from '@/utils';
+import { ErrorElement } from '@/pages/ErrorElement';
 
-import { ErrorElement } from './ErrorElement';
+import { clipboardCopy } from '@/utils';
 
 jest.mock('@/utils', () => {
   return {

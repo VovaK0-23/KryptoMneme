@@ -1,4 +1,4 @@
-import { findOppositeElement } from './array';
+import { findOppositeElement } from '@/utils/array';
 
 describe('findOppositeElement', () => {
   it('should return the opposite element from the end of the array', () => {

@@ -4,11 +4,11 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { CustomThemeContext, CustomThemeProvider } from '@/contexts/CustomThemeContext';
+import { SettingsContext } from '@/contexts/SettingsContext';
+
 import { SettingsState } from '@/reducers/settingsReducer';
 import { DeepPartial } from '@/types';
-
-import { SettingsContext } from '../SettingsContext';
-import { CustomThemeContext, CustomThemeProvider } from './CustomThemeContext';
 
 describe('CustomThemeProvider', () => {
   const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {

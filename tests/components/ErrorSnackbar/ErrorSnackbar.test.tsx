@@ -5,10 +5,10 @@ import userEvent from '@testing-library/user-event';
 
 import { ErrorContext } from '@/contexts/ErrorContext';
 
+import { ErrorSnackbar } from '@/components/ErrorSnackbar';
+
 import { StackAction, StackState } from '@/reducers/stackReducer';
 import { CustomError } from '@/utils';
-
-import { ErrorSnackbar } from './ErrorSnackbar';
 
 describe('ErrorSnackbar', () => {
   test('should render null when there is no error', () => {

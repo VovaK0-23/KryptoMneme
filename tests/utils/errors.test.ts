@@ -1,4 +1,4 @@
-import { CommonError, RequestError } from './errors';
+import { CommonError, RequestError } from '@/utils/errors';
 
 // Mock the console methods to prevent logging during tests
 beforeAll(() => {
