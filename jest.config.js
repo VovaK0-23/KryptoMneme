@@ -23,7 +23,7 @@ export default {
 
       rootDir: '<rootDir>',
       // setupFiles: [],
-      setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+      setupFilesAfterEnv: ['<rootDir>/tests/setupTests.ts'],
       slowTestThreshold: 5,
       // snapshotSerializers: [],
       testEnvironment: 'jsdom',
