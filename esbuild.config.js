@@ -91,34 +91,24 @@ function generateManifest(startUrl = '/') {
   const files = fs.readdirSync(outdir + '/assets');
 
   const manifest = {
+    start_url: startUrl,
     short_name: 'KryptoMneme',
     name: 'KryptoMneme',
     icons: [
       {
-        src: 'favicon.ico',
-        sizes: '64x64',
-        type: 'image/x-icon',
-      },
-      {
-        src: 'favicon-16x16.png',
-        sizes: '16x16',
+        src: '/android-chrome-192x192.png',
+        sizes: '192x192',
         type: 'image/png',
       },
       {
-        src: 'favicon-32x32.png',
-        sizes: '32x32',
-        type: 'image/png',
-      },
-      {
-        src: 'apple-touch-icon.png',
-        sizes: '144x144',
+        src: '/android-chrome-512x512.png',
+        sizes: '512x512',
         type: 'image/png',
       },
     ],
-    start_url: startUrl,
+    theme_color: '#272727',
+    background_color: '#272727',
     display: 'standalone',
-    theme_color: '#000000',
-    background_color: '#ffffff',
     files,
   };
 
