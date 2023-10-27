@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useEffect, useReducer, useRef, useState } from 'react';
+import React, { ReactNode, createContext, useEffect, useReducer, useRef } from 'react';
 
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -46,6 +46,8 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
 
     if (shouldUpdateSearchParams.current) {
       const oldSearchParams = searchParams.toString();
+      if (location.pathname === '/shortcuts') return;
+
       if (location.pathname === '/') {
         searchParams.set('page', settings.home.page.toString());
         searchParams.set('perPage', settings.home.perPage.toString());
