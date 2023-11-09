@@ -13,16 +13,17 @@ import { DeepPartial } from '@/types';
 describe('CustomThemeProvider', () => {
   const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    const [settings, setSettings] = useState({
-      general: { themeMode: prefersDarkMode ? 'dark' : 'light' },
+    const [generalSettings, setSettings] = useState({
+      themeMode: prefersDarkMode ? 'dark' : 'light',
     });
 
-    const updateSettings = (payload: DeepPartial<SettingsState>) => {
-      setSettings(payload as typeof settings);
+    const updateSettings = () => (payload: DeepPartial<SettingsState['general']>) => {
+      setSettings(payload as typeof generalSettings);
     };
 
     return (
-      <SettingsContext.Provider value={{ settings: settings as SettingsState, updateSettings }}>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      <SettingsContext.Provider value={{ generalSettings, updateSettings } as any}>
         {children}
       </SettingsContext.Provider>
     );

@@ -10,8 +10,8 @@ import { SettingsContext } from '../SettingsContext';
 export const CustomThemeContext = createContext({ toggleThemeMode: noop });
 
 export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
-  const { settings, updateSettings } = useContext(SettingsContext);
-  const mode = settings.general.themeMode;
+  const { generalSettings, updateSettings } = useContext(SettingsContext);
+  const mode = generalSettings.themeMode;
 
   const theme = useMemo(
     () =>
@@ -27,7 +27,7 @@ export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const toggleThemeMode = useCallback(() => {
-    updateSettings({ general: { themeMode: mode === 'light' ? 'dark' : 'light' } });
+    updateSettings('general')({ themeMode: mode === 'light' ? 'dark' : 'light' });
   }, [mode]);
 
   return (

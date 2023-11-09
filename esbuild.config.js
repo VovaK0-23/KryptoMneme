@@ -95,7 +95,7 @@ function generateManifest(startUrl = '/') {
     short_name: 'KryptoMneme',
     name: 'KryptoMneme',
     icons: [
-       {
+      {
         src: 'favicon.ico',
         sizes: '48x48',
         type: 'image/x-icon',

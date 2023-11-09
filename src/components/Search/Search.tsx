@@ -20,10 +20,14 @@ import { matchesShortcut } from '@/utils';
 export const Search = () => {
   const { dispatchError } = useContext(ErrorContext);
   const { setSearchCoins, setSearchLoading } = useContext(SearchCoinsContext);
-  const { settings, updateSettings } = useContext(SettingsContext);
+  const {
+    generalSettings: { q },
+    updateSettings,
+  } = useContext(SettingsContext);
+  const updateGeneralSettings = updateSettings('general');
+
   const { shortcuts } = useContext(ShortcutsContext);
 
-  const { q } = settings.general;
   const [options, setOptions] = useState<GeckoSearchCoin[]>([]);
 
   const autocompleteRef = useRef<HTMLDivElement>(null);
@@ -31,7 +35,7 @@ export const Search = () => {
   const navigate = useNavigate();
 
   const handleInputChange = (q: string) => {
-    updateSettings({ general: { q } });
+    updateGeneralSettings({ q });
   };
 
   const search = useCallback(

@@ -29,9 +29,12 @@ export const Coin = () => {
   const navigate = useNavigate();
   const { dispatchError } = useContext(ErrorContext);
   const [ohlcData, setOhlcData] = useState<GeckoOhlcData[]>([]);
-  const { settings, updateSettings } = useContext(SettingsContext);
-  const { currency } = settings.general;
-  const { days, priceAutoScale, priceScaleMode } = settings.coin;
+  const {
+    generalSettings: { currency },
+    coinSettings: { days, priceAutoScale, priceScaleMode },
+    updateSettings,
+  } = useContext(SettingsContext);
+  const updateCoinSettings = updateSettings('coin');
 
   useEffect(() => {
     if (!coinId) return;
@@ -76,7 +79,7 @@ export const Coin = () => {
           >
             <PriceScaleModeButtons
               mode={priceScaleMode}
-              setMode={(priceScaleMode) => updateSettings({ coin: { priceScaleMode } })}
+              setMode={(priceScaleMode) => updateCoinSettings({ priceScaleMode })}
             />
 
             <ToggleButton
@@ -85,24 +88,19 @@ export const Coin = () => {
               value='check'
               selected={priceAutoScale}
               title='Price auto scale'
-              onChange={() => updateSettings({ coin: { priceAutoScale: !priceAutoScale } })}
+              onChange={() => updateCoinSettings({ priceAutoScale: !priceAutoScale })}
             >
               <FitScreenOutlined />
             </ToggleButton>
           </Box>
 
           <Box sx={{ display: 'flex' }}>
-            <TimeScaleDaysButtons
-              days={days}
-              setDays={(days) => updateSettings({ coin: { days } })}
-            />
+            <TimeScaleDaysButtons days={days} setDays={(days) => updateCoinSettings({ days })} />
 
             <CandlestickChart
               data={ohlcData}
               autoScale={priceAutoScale}
-              setAutoScale={(priceAutoScale) => {
-                updateSettings({ coin: { priceAutoScale } });
-              }}
+              setAutoScale={(priceAutoScale) => updateCoinSettings({ priceAutoScale })}
               mode={priceScaleMode}
             />
           </Box>

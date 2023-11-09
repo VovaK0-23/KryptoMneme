@@ -8,12 +8,15 @@ import { SettingsContext } from '@/contexts/SettingsContext';
 import { CoinGeckoService } from '@/services/coingecko';
 
 export const CurrencySelector = () => {
-  const { settings, updateSettings } = useContext(SettingsContext);
+  const {
+    generalSettings: { currency },
+    updateSettings,
+  } = useContext(SettingsContext);
+  const updateGeneralSettings = updateSettings('general');
   const { dispatchError } = useContext(ErrorContext);
 
   const [currencies, setCurrencies] = useState(['usd', 'btc']);
 
-  const { currency } = settings.general;
   const btn = useRef<HTMLButtonElement>(null);
 
   const [open, setOpen] = useState(false);
@@ -23,7 +26,7 @@ export const CurrencySelector = () => {
   const handleClose = useCallback(() => setOpen(false), []);
 
   const handleChange = (currency: string) => {
-    updateSettings({ general: { currency } });
+    updateGeneralSettings({ currency });
     setOpen(false);
   };
 

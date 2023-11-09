@@ -24,12 +24,15 @@ import { CoinGeckoService, GeckoSearchCoin, GeckoSimplePriceCoin } from '@/servi
 import { useEffectAfterRender } from '@/hooks';
 
 export const Home = () => {
-  const { settings, updateSettings } = useContext(SettingsContext);
+  const {
+    generalSettings: { currency },
+    homeSettings: { perPage, page },
+    updateSettings,
+  } = useContext(SettingsContext);
   const { dispatchError } = useContext(ErrorContext);
   const { searchCoins, searchLoading } = useContext(SearchCoinsContext);
-  const { perPage, page } = settings.home;
-  const { currency } = settings.general;
   const perPageOptions = [5, 10, 25];
+  const updateHomeSettings = updateSettings('home');
 
   const [coinsInfo, setCoinsInfo] = useState<Record<string, GeckoSimplePriceCoin>>({});
 
@@ -52,11 +55,11 @@ export const Home = () => {
   );
 
   const handlePageChange = useCallback((_: unknown, page: number) => {
-    updateSettings({ home: { page } });
+    updateHomeSettings({ page });
   }, []);
 
   const handlePerPageChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    updateSettings({ home: { perPage: +e.target.value } });
+    updateHomeSettings({ perPage: +e.target.value });
   }, []);
 
   useEffect(() => {
@@ -65,7 +68,7 @@ export const Home = () => {
 
   useEffectAfterRender(
     () => {
-      updateSettings({ home: { page: 0 } });
+      updateHomeSettings({ page: 0 });
     },
     [searchCoins, perPage],
     2

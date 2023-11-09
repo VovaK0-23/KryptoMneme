@@ -19,14 +19,15 @@ describe('CurrencySelector', () => {
   });
 
   const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [settings, setSettings] = React.useState({ general: { currency: 'usd' } });
+    const [generalSettings, setSettings] = React.useState({ currency: 'usd' });
 
-    const updateSettings = (payload: DeepPartial<SettingsState>) => {
-      setSettings(payload as typeof settings);
+    const updateSettings = () => (payload: DeepPartial<SettingsState['general']>) => {
+      setSettings(payload as typeof generalSettings);
     };
 
     return (
-      <SettingsContext.Provider value={{ settings: settings as SettingsState, updateSettings }}>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      <SettingsContext.Provider value={{ generalSettings, updateSettings } as any}>
         {children}
       </SettingsContext.Provider>
     );
