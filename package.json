@@ -59,7 +59,7 @@
     "watch:lint": "npm run lint -- --watch",
     "watch:tsc": "tsc --pretty --watch",
     "fmt": "prettier --write",
-    "predeploy": "npm build",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d public"
   },
   "jest-runner-eslint": {
