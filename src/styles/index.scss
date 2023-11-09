@@ -3,14 +3,18 @@
 }
 
 ::-webkit-scrollbar-track {
-  border-radius: 5px;
+  background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #f79413;
   border-radius: 10px;
+  border: 4px solid transparent;
+  background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #e48b18;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
