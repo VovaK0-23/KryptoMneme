@@ -142,13 +142,7 @@ export const CandlestickChart = (props: {
 
   useEffect(() => {
     chart.current?.priceScale('right').applyOptions({ autoScale });
-  }, [autoScale, data]);
 
-  useEffect(() => {
-    chart.current?.priceScale('right').applyOptions({ mode });
-  }, [mode]);
-
-  useEffect(() => {
     const listener = () => {
       const autoScaleOption = chart.current?.priceScale('right').options().autoScale;
       if (autoScaleOption !== undefined) setAutoScale(autoScaleOption);
@@ -156,7 +150,11 @@ export const CandlestickChart = (props: {
     chartEl.current?.addEventListener('click', listener);
 
     return () => chartEl.current?.removeEventListener('click', listener);
-  }, [autoScale]);
+  }, [autoScale, data]);
+
+  useEffect(() => {
+    chart.current?.priceScale('right').applyOptions({ mode });
+  }, [mode]);
 
   return (
     <TableContainer>
