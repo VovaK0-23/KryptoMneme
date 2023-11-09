@@ -50,16 +50,16 @@
     "prettier": "2.8.8"
   },
   "scripts": {
-    "dev": "concurrently -k -n 'build' -c 'auto' 'yarn start' 'yarn:*:watch'",
+    "dev": "concurrently -k -n 'build' -c 'auto' 'npm start' 'npm:watch:*'",
     "start": "node esbuild.config.js --start",
     "build": "node esbuild.config.js --build",
     "test": "jest --selectProjects test",
     "lint": "jest --selectProjects lint",
-    "test:watch": "yarn test --watch",
-    "lint:watch": "yarn lint --watch",
-    "tsc:watch": "tsc --pretty --watch",
+    "watch:test": "npm test -- --watch",
+    "watch:lint": "npm run lint -- --watch",
+    "watch:tsc": "tsc --pretty --watch",
     "fmt": "prettier --write",
-    "predeploy": "yarn build",
+    "predeploy": "npm build",
     "deploy": "gh-pages -d public"
   },
   "jest-runner-eslint": {

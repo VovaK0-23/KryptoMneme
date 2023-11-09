@@ -8,18 +8,27 @@ KryptoMneme is open-source and available under the MIT License. Contributions ar
 
 ## Installation
 
-To start the development server, you need to have `yarn` installed. Run the following commands:
+To start the development server, you need to have `npm` installed. Run the following commands:
 
 1. Install dependencies:
 
    ```bash
-   yarn install
+   npm install
    ```
 
 2. Start the development server:
+
    ```bash
-   yarn dev
+   npm run dev
    ```
+
+## Deploy
+
+Deploy to gh-pages:
+
+```bash
+npm run deploy
+```
 
 ## Contributing
 
