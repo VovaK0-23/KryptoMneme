@@ -1,5 +1,6 @@
 export * from './result';
 export * from './deepPartial';
+export * from './primitive';
 
 export type Identifiable<T extends object> = T & { id: number };
 

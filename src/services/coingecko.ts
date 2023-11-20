@@ -1,3 +1,4 @@
+import { UTCMilliseconds } from '@/types';
 import { CustomError, fetchJson } from '@/utils';
 
 export type GeckoSearchCoin = {
@@ -17,7 +18,13 @@ export type GeckoSimplePriceCoin = {
   daily_change?: number;
 };
 
-export type GeckoOhlcData = [number, number, number, number, number];
+export type GeckoOhlcData = [UTCMilliseconds, number, number, number, number]; // [ms, open, high, low, close]
+
+export type GeckoMarketChartData = {
+  prices: [UTCMilliseconds, number][];
+  market_caps: [UTCMilliseconds, number][];
+  total_volumes: [UTCMilliseconds, number][];
+};
 
 export const CoinGeckoService = {
   search: async (input: string) => {
@@ -75,6 +82,14 @@ export const CoinGeckoService = {
   ohlc: async (id: string, currency: string, days: string) => {
     const res = await fetchJson<GeckoOhlcData[]>(
       `https://api.coingecko.com/api/v3/coins/${id}/ohlc?vs_currency=${currency}&days=${days}`,
+      { method: 'GET' },
+      formatErrors
+    );
+    return res;
+  },
+  marketChart: async (id: string, currency: string, days: string) => {
+    const res = await fetchJson<GeckoMarketChartData>(
+      `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=${currency}&days=${days}`,
       { method: 'GET' },
       formatErrors
     );

@@ -18,17 +18,19 @@ import {
 import { ErrorContext } from '@/contexts/ErrorContext';
 import { SettingsContext } from '@/contexts/SettingsContext';
 
-import { CandlestickChart } from '@/components/CandlestickChart';
-import { PriceScaleModeButtons } from '@/components/CandlestickChart';
-import { TimeScaleDaysButtons } from '@/components/CandlestickChart';
+import { CandlestickChart } from '@/components/charts';
+import { PriceScaleModeButtons } from '@/components/charts';
+import { TimeScaleDaysButtons } from '@/components/charts';
+import { LineChart } from '@/components/charts';
 
-import { CoinGeckoService, GeckoOhlcData } from '@/services/coingecko';
+import { CoinGeckoService, GeckoMarketChartData, GeckoOhlcData } from '@/services/coingecko';
 
 export const Coin = () => {
   const { coinId } = useParams();
   const navigate = useNavigate();
   const { dispatchError } = useContext(ErrorContext);
   const [ohlcData, setOhlcData] = useState<GeckoOhlcData[]>([]);
+  const [marketChartData, setMarketChartData] = useState<GeckoMarketChartData | null>(null);
   const {
     generalSettings: { currency },
     coinSettings: { days, priceAutoScale, priceScaleMode },
@@ -42,6 +44,20 @@ export const Coin = () => {
     (async () => {
       const res = await CoinGeckoService.ohlc(coinId, currency, days);
       if (res.ok) setOhlcData(res.data);
+      else
+        dispatchError({
+          type: 'ADD',
+          payload: res.error,
+        });
+    })();
+  }, [days, currency, coinId]);
+
+  useEffect(() => {
+    if (!coinId) return;
+
+    (async () => {
+      const res = await CoinGeckoService.marketChart(coinId, currency, days);
+      if (res.ok) setMarketChartData(res.data);
       else
         dispatchError({
           type: 'ADD',
@@ -99,6 +115,22 @@ export const Coin = () => {
 
             <CandlestickChart
               data={ohlcData}
+              autoScale={priceAutoScale}
+              setAutoScale={(priceAutoScale) => updateCoinSettings({ priceAutoScale })}
+              mode={priceScaleMode}
+            />
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMore />}>Price Chart</AccordionSummary>
+        <AccordionDetails>
+          <Box sx={{ display: 'flex' }}>
+            <TimeScaleDaysButtons days={days} setDays={(days) => updateCoinSettings({ days })} />
+
+            <LineChart
+              data={marketChartData}
               autoScale={priceAutoScale}
               setAutoScale={(priceAutoScale) => updateCoinSettings({ priceAutoScale })}
               mode={priceScaleMode}

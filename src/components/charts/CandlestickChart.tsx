@@ -17,8 +17,10 @@ import {
 import { List, ListItem, TableContainer, Tooltip, alpha } from '@mui/material';
 import { useTheme } from '@mui/material';
 
+import { GeckoOhlcData } from '@/services/coingecko';
+
 export const CandlestickChart = (props: {
-  data: [number, number, number, number, number][];
+  data: GeckoOhlcData[];
   autoScale: boolean;
   setAutoScale: (autoScale: boolean) => void;
   mode: PriceScaleMode;
